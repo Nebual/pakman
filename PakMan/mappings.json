@@ -1,0 +1,17 @@
+﻿{
+	"games": [
+		{
+			"name": "Diablo 1",
+			"filename": "diablo1.7z",
+			"installfolder": "H:/test/diablo1",
+		},
+		{
+			"name": "Diablo 2",
+			"filename": "diablo2.7z",
+		},
+		{
+			"name": "Warcraft 2",
+			"filename": "warcraft2.7z",
+		},
+	],
+}
