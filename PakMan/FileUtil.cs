@@ -92,10 +92,11 @@ namespace PakMan
 			}
 		}
 
-		public string archiveSize(string archiveName) {
-			if (archiveName.Length == 0) return "";
-			if (!archiveExists(archiveName)) return "";
-			return SizeSuffix(new System.IO.FileInfo(Path.Combine(cacheFolder, archiveName)).Length);
+		public static long archiveSize(string archiveName) {
+			if (archiveName.Length == 0) return 0;
+			string archivePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "archive_cache", archiveName);
+			if (!File.Exists(archivePath)) return 0;
+			return new System.IO.FileInfo(archivePath).Length;
 		}
 
 		static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
@@ -163,7 +164,16 @@ namespace PakMan
 
 	public class GameMapping
 	{
-		public GameMapping(string name) {
+		public GameMapping() {
+			this.name = "?";
+			this.filename = "";
+			this.savefolder = "";
+			this.installfolder = "";
+			this.archive_size = 0;
+			this.extracted_size = 0;
+			this.targetexe = "";
+		}
+		public GameMapping(string name) : this() {
 			this.name = name;
 		}
 
@@ -185,6 +195,14 @@ namespace PakMan
 				return name + Path.DirectorySeparatorChar;
 			}
 			set { _installfolder = value.Replace("/", "\\").TrimEnd('\\'); if (_installfolder.Length > 0) { _installfolder += "\\"; } }
+		}
+		private long _archive_size;
+		public long archive_size {
+			get {
+				if (_archive_size != 0) return _archive_size;
+				return _archive_size = FileUtil.archiveSize(filename);
+			}
+			set { _archive_size = value; }
 		}
 		public long extracted_size { get; set; }
 		public string targetexe { get; set; }

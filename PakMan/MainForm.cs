@@ -34,7 +34,7 @@ namespace PakMan
 				gameLookup[game.name] = game;
 				bool downloaded = (game.filename.Length > 0 && F.archiveExists(game.filename));
 				bool installed = Directory.Exists(game.name);
-				string archiveSize = downloaded ? F.archiveSize(game.filename) : "";
+				string archiveSize = downloaded ? FileUtil.SizeSuffix(game.archive_size) : "";
 				string gameSize = downloaded ? FileUtil.SizeSuffix(game.extracted_size) : "";
 				itemList.Rows.Add(new object[] { downloaded, installed, game.name, archiveSize, gameSize });
 			}
@@ -179,6 +179,7 @@ namespace PakMan
 			if(folderBrowserDialog1.ShowDialog() == DialogResult.OK) {
 				F.createArchive(game.filename, folderBrowserDialog1.SelectedPath);
 				if (F.archiveExists(game.filename)) {
+					game.archive_size = 0;  long _ = game.archive_size; // recalc archive size
 					itemList.SelectedRows[0].Cells[0].Value = true;
 					F.uploadArchive(game.filename);
 				}
