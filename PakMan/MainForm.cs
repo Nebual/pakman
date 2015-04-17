@@ -76,8 +76,8 @@ namespace PakMan
 			}
 		}
 
-		public void log(string text) {
-			logBox.AppendText(text + "\r\n");
+		public void log(string text, string suffix = "\r\n") {
+			logBox.AppendText(text + suffix);
 		}
 
 		private void setDirty(bool flag) {
@@ -167,6 +167,21 @@ namespace PakMan
 			if (game.targetexe != targetExeTextBox.Text) {
 				game.targetexe = targetExeTextBox.Text;
 				setDirty(true);
+			}
+		}
+
+		private void buildArchiveButton_Click(object sender, EventArgs e) {
+			GameMapping game = selectedGame();
+			if (game.name == "New" || game.filename.Length == 0) {
+				log("Error: Fill out game name and archive name.");
+				return;
+			}
+			if(folderBrowserDialog1.ShowDialog() == DialogResult.OK) {
+				F.createArchive(game.filename, folderBrowserDialog1.SelectedPath);
+				if (F.archiveExists(game.filename)) {
+					itemList.SelectedRows[0].Cells[0].Value = true;
+					F.uploadArchive(game.filename);
+				}
 			}
 		}
 	}

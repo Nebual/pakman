@@ -23,8 +23,8 @@ namespace PakMan
 		}
 
 
-		public void log(string text) {
-			context.log(text);
+		public void log(string text, string suffix="\r\n") {
+			context.log(text, suffix);
 		}
 
 		public static long GetDirectorySize(string parentDirectory) {
@@ -107,6 +107,52 @@ namespace PakMan
 			decimal adjustedSize = (decimal)value / (1L << (mag * 10));
 
 			return string.Format("{0:n1} {1}", adjustedSize, SizeSuffixes[mag]);
+		}
+
+		public void createArchive(string archiveName, string folderPath) {
+			log("Creating archive " + archiveName, " ...");
+			SevenZipCompressor compressor = new SevenZipCompressor();
+			compressor.CompressionLevel = CompressionLevel.Ultra;
+			compressor.CompressionMethod = CompressionMethod.Lzma;
+			compressor.CompressionMode = CompressionMode.Create;
+			compressor.IncludeEmptyDirectories = true;
+			compressor.CompressDirectory(folderPath, Path.Combine(cacheFolder, archiveName), true);
+			log(" done");
+		}
+
+		public void uploadArchive(string filename) {
+			log("Uploading archive " + filename, " ...");
+			string ftpServerIP = "ftp.nebtown.info";
+			string ftpUserName = "pakman@nebtown.info";
+			string ftpPassword = "[HV[O9@5}dz3";
+
+			FileInfo objFile = new FileInfo(Path.Combine(cacheFolder, filename));
+			FtpWebRequest objFTPRequest = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ftpServerIP + "/" + objFile.Name));
+			objFTPRequest.Credentials = new NetworkCredential(ftpUserName, ftpPassword);
+			objFTPRequest.KeepAlive = false; // Should the control connection be closed after a command is executed.
+			objFTPRequest.UseBinary = true;
+			objFTPRequest.ContentLength = objFile.Length;
+			objFTPRequest.Method = WebRequestMethods.Ftp.UploadFile;
+
+			int intBufferLength = 16 * 1024;
+			byte[] objBuffer = new byte[intBufferLength];
+
+			FileStream objFileStream = objFile.OpenRead();
+			try {
+				Stream objStream = objFTPRequest.GetRequestStream();
+
+				int len = 0;
+				while ((len = objFileStream.Read(objBuffer, 0, intBufferLength)) != 0) {
+					objStream.Write(objBuffer, 0, len);
+				}
+
+				objStream.Close();
+				objFileStream.Close();
+				log(" done");
+			}
+			catch (Exception ex) {
+				throw ex;
+			}
 		}
 	}
 
