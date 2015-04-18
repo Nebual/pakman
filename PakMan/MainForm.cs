@@ -22,13 +22,19 @@ namespace PakMan
 		}
 
 		FileUtil F;
-		bool dirty;
 		Mapping mappings;
+		public Button saveMappingsPublic;
 		IDictionary<string, GameMapping> gameLookup = new Dictionary<string, GameMapping>();
 
 		private void MainForm_Load(object sender, EventArgs e) {
+			saveMappingsPublic = saveMappings;
 			F = new FileUtil(this);
+			loadMapping();
+		}
 
+		private void loadMapping() {
+			itemList.Rows.Clear();
+			gameLookup.Clear();
 			mappings = JsonConvert.DeserializeObject<Mapping>(File.ReadAllText("mappings.json"));
 			foreach (GameMapping game in mappings.games) {
 				gameLookup[game.name] = game;
@@ -38,11 +44,10 @@ namespace PakMan
 				string gameSize = downloaded ? FileUtil.SizeSuffix(game.extracted_size) : "";
 				itemList.Rows.Add(new object[] { downloaded, installed, game.name, archiveSize, gameSize });
 			}
-
-			/*State state = JsonConvert.DeserializeObject<State>(File.ReadAllText("state.json"));
-			foreach (ListViewItem item in installCheckList.Items) {
-				item.Checked = state.games[item.Text].ticked;
-			}*/
+			F.dirty = false;
+		}
+		private void revertButton_Click(object sender, EventArgs e) {
+			loadMapping();
 		}
 
 		private void apply_Click(object sender, EventArgs e) {
@@ -63,7 +68,7 @@ namespace PakMan
 					if ((size = F.extractArchive(game.filename, game.installfolder)) > 0) {
 						game.extracted_size = size;
 						row.Cells[4].Value = FileUtil.SizeSuffix(game.extracted_size);
-						setDirty(true);
+						F.dirty = true;
 					}
 				}
 				else {
@@ -80,23 +85,14 @@ namespace PakMan
 			logBox.AppendText(text + suffix);
 		}
 
-		private void setDirty(bool flag) {
-			if (flag != dirty) {
-				dirty = flag;
-				if (dirty) {
-					saveMappings.Text = "* " + saveMappings.Text;
-				}
-				else {
-					saveMappings.Text = saveMappings.Text.TrimStart(new char[]{'*',' '});
-				}
-			}
-		}
-
 		GameMapping activeGame;
 		public GameMapping selectedGame() {
-			if (itemList.SelectedRows[0].Cells[2].Value != null) {
+			try {
 				activeGame = gameLookup[(string)itemList.SelectedRows[0].Cells[2].Value];
 			}
+			catch (NullReferenceException) { }
+			catch (IndexOutOfRangeException) { }
+			catch (ArgumentOutOfRangeException) { }
 			return activeGame;
 		}
 
@@ -118,13 +114,13 @@ namespace PakMan
 				mappings.games.Add(game);
 				gameLookup[game.name] = game;
 				itemList.Rows.Add(new object[] { false, false, game.name, "", "" });
-				setDirty(true);
+				F.dirty = true;
 			}
 		}
 
 		private void saveMappings_Click(object sender, EventArgs e) {
 			File.WriteAllText("mappings.json", JsonConvert.SerializeObject(mappings, Formatting.Indented));
-			setDirty(false);
+			F.dirty = false;
 		}
 
 		private void nameBox_TextChanged(object sender, EventArgs e) {
@@ -134,7 +130,7 @@ namespace PakMan
 				gameLookup[nameBox.Text] = game;
 				game.name = nameBox.Text;
 				itemList.SelectedRows[0].Cells[2].Value = nameBox.Text;
-				setDirty(true);
+				F.dirty = true;
 			}
 		}
 
@@ -142,7 +138,7 @@ namespace PakMan
 			GameMapping game = selectedGame();
 			if (game.filename != archiveBox.Text) {
 				game.filename = archiveBox.Text;
-				setDirty(true);
+				F.dirty = true;
 			}
 		}
 
@@ -150,7 +146,7 @@ namespace PakMan
 			GameMapping game = selectedGame();
 			if (game.installfolder != installFolderTextBox.Text) {
 				game.installfolder = installFolderTextBox.Text;
-				setDirty(true);
+				F.dirty = true;
 			}
 		}
 
@@ -158,7 +154,7 @@ namespace PakMan
 			GameMapping game = selectedGame();
 			if (game.savefolder != saveFolderTextBox.Text) {
 				game.savefolder = saveFolderTextBox.Text;
-				setDirty(true);
+				F.dirty = true;
 			}
 		}
 
@@ -166,7 +162,7 @@ namespace PakMan
 			GameMapping game = selectedGame();
 			if (game.targetexe != targetExeTextBox.Text) {
 				game.targetexe = targetExeTextBox.Text;
-				setDirty(true);
+				F.dirty = true;
 			}
 		}
 

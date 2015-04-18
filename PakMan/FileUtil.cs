@@ -16,6 +16,17 @@ namespace PakMan
 
 		MainForm context;
 
+		private bool _dirty;
+		public bool dirty {
+			get { return _dirty; }
+			set {
+				if (value != _dirty) {
+					_dirty = value;
+					context.saveMappingsPublic.Text = (_dirty ? "* " : "") + context.saveMappingsPublic.Text.TrimStart(new char[] { '*', ' ' });
+				}
+			}
+		}
+
 		public FileUtil(MainForm context) {
 			this.context = context;
 			cacheFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "archive_cache");
