@@ -26,6 +26,9 @@ namespace PakMan
 		public Button saveMappingsPublic;
 		IDictionary<string, GameMapping> gameLookup = new Dictionary<string, GameMapping>();
 
+		// Todo: ask user for this
+		static string shortcutsFilePath = "H:\\Steam\\userdata\\33788696\\config\\shortcuts.vdf";
+
 		private void MainForm_Load(object sender, EventArgs e) {
 			saveMappingsPublic = saveMappings;
 			F = new FileUtil(this);
@@ -39,7 +42,7 @@ namespace PakMan
 			foreach (GameMapping game in mappings.games) {
 				gameLookup[game.name] = game;
 				bool downloaded = (game.filename.Length > 0 && F.archiveExists(game.filename));
-				bool installed = Directory.Exists(game.name);
+				bool installed = Directory.Exists(game.installfolder);
 				string archiveSize = downloaded ? FileUtil.SizeSuffix(game.archive_size) : "";
 				string gameSize = downloaded ? FileUtil.SizeSuffix(game.extracted_size) : "";
 				itemList.Rows.Add(new object[] { downloaded, installed, game.name, archiveSize, gameSize });
@@ -51,11 +54,15 @@ namespace PakMan
 		}
 
 		private void apply_Click(object sender, EventArgs e) {
+			log("");
+
+			SteamShortcuts steamShortcuts = new SteamShortcuts(shortcutsFilePath);
+
 			foreach (DataGridViewRow row in itemList.Rows) {
 				if (row.Cells[2].Value == null) continue;
 
 				GameMapping game = gameLookup[(string)row.Cells[2].Value];
-				log("Processing " + game.name);
+				logContext = game.name;
 
 				if ((bool)row.Cells[0].Value) {
 					F.downloadArchive(game.filename);
@@ -68,20 +75,31 @@ namespace PakMan
 					if ((size = F.extractArchive(game.filename, game.installfolder)) > 0) {
 						game.extracted_size = size;
 						row.Cells[4].Value = FileUtil.SizeSuffix(game.extracted_size);
-						F.dirty = true;
+						steamShortcuts.addGame(game);
 					}
 				}
 				else {
 					F.deleteGame(game.installfolder);
+					steamShortcuts.removeGame(game);
 				}
 
 				if (!(bool)row.Cells[0].Value) {
 					F.deleteArchive(game.filename);
 				}
 			}
+			logContext = "";
+
+			if (steamShortcuts.flush()) log("Updated Steam's shortcuts.vdf file. Please restart Steam.");
+			log("** Processing Complete **");
 		}
 
+		private string logContext = "";
 		public void log(string text, string suffix = "\r\n") {
+			if (logContext.Length > 2) {
+				logBox.AppendText("Processing " + logContext + ":\r\n");
+				logContext = "x";
+			}
+			if (logContext == "x" && logBox.Text.LastOrDefault() == '\n') text = "\t" + text;
 			logBox.AppendText(text + suffix);
 		}
 
@@ -105,6 +123,7 @@ namespace PakMan
 			archiveBox.Text = game.filename;
 			saveFolderTextBox.Text = game.savefolder;
 			installFolderTextBox.Text = game.installfolder;
+			targetExeTextBox.Text = game.targetexe;
 		}
 
 		private void addNewItemButton_Click(object sender, EventArgs e) {
@@ -175,7 +194,7 @@ namespace PakMan
 			if(folderBrowserDialog1.ShowDialog() == DialogResult.OK) {
 				F.createArchive(game.filename, folderBrowserDialog1.SelectedPath);
 				if (F.archiveExists(game.filename)) {
-					game.archive_size = 0;  long _ = game.archive_size; // recalc archive size
+					game.archive_size = 0; itemList.SelectedRows[0].Cells[3].Value = FileUtil.SizeSuffix(game.archive_size); // recalc archive size
 					itemList.SelectedRows[0].Cells[0].Value = true;
 					F.uploadArchive(game.filename);
 				}

@@ -1,17 +1,40 @@
-﻿{
-	"games": [
-		{
-			"name": "Diablo 1",
-			"filename": "diablo1.7z",
-			"installfolder": "H:/test/diablo1",
-		},
-		{
-			"name": "Diablo 2",
-			"filename": "diablo2.7z",
-		},
-		{
-			"name": "Warcraft 2",
-			"filename": "warcraft2.7z",
-		},
-	],
+{
+  "games": [
+    {
+      "name": "Diablo 1",
+      "filename": "diablo1.7z",
+      "savefolder": "",
+      "installfolder": "H:\\test\\diablo1\\",
+      "archive_size": 3228,
+      "extracted_size": 11653,
+      "targetexe": ""
+    },
+    {
+      "name": "Diablo 2",
+      "filename": "diablo2.7z",
+      "savefolder": "",
+      "installfolder": "H:\\test\\Diablo2\\",
+      "archive_size": 0,
+      "extracted_size": 140764,
+      "targetexe": ""
+    },
+    {
+      "name": "Warcraft 2!!",
+      "filename": "warcraft2.7z",
+      "savefolder": "",
+      "installfolder": "Warcraft 2!!\\",
+      "archive_size": 0,
+      "extracted_size": 0,
+      "targetexe": ""
+    },
+    {
+      "name": "Diablo 1 Tchernobog",
+      "filename": "d1_tchernobog.7z",
+      "savefolder": "",
+      "installfolder": "Diablo\\",
+      "archive_size": 7035886,
+      "extracted_size": 12105073,
+      "targetexe": "Tchernobog.exe"
+    },
+  ]
 }

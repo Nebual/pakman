@@ -55,10 +55,11 @@ namespace PakMan
 				return;
 			}
 			if (overwrite || !archiveExists(archiveName)) {
-				log("Downloading " + archiveName);
+				log("Downloading " + archiveName, "...");
 				using (WebClient Client = new WebClient()) {
 					Client.DownloadFile("http://nebtown.info/pakman/" + archiveName, Path.Combine(cacheFolder, archiveName));
 				}
+				log(" done.");
 			}
 		}
 		public void deleteArchive(string archiveName) {
@@ -67,8 +68,9 @@ namespace PakMan
 				return;
 			}
 			if (archiveExists(archiveName)) {
-				log("Deleting archive " + archiveName);
+				log("Deleting archive " + archiveName, "...");
 				File.Delete(Path.Combine(cacheFolder, archiveName));
+				log(" done.");
 			}
 		}
 
@@ -90,16 +92,19 @@ namespace PakMan
 			}
 			Directory.CreateDirectory(destinationPath);
 			string archivePath = Path.Combine(cacheFolder, archiveName);
-			log("Extracting " + archiveName + " to " + destinationPath);
+			log("Extracting " + archiveName + " to " + destinationPath, "...");
 			using (SevenZipExtractor extractor = new SevenZipExtractor(archivePath)) {
 				extractor.ExtractArchive(destinationPath);
+				log(" done.");
 				return extractor.UnpackedSize;
 			}
 		}
 		public void deleteGame(string destinationPath) {
 			if (destinationPath.Length == 0) return;
 			if (Directory.Exists(destinationPath)) {
+				log("Uninstalling " + destinationPath, "");
 				Directory.Delete(destinationPath, true);
+				log(" done.");
 			}
 		}
 
@@ -129,7 +134,7 @@ namespace PakMan
 			compressor.CompressionMode = CompressionMode.Create;
 			compressor.IncludeEmptyDirectories = true;
 			compressor.CompressDirectory(folderPath, Path.Combine(cacheFolder, archiveName), true);
-			log(" done");
+			log(" done.");
 		}
 
 		public void uploadArchive(string filename) {
