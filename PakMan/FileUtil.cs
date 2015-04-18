@@ -140,9 +140,9 @@ namespace PakMan
 
 		public void uploadArchive(string filename) {
 			log("Uploading archive " + filename, " ...");
-			string ftpServerIP = "ftp.nebtown.info";
-			string ftpUserName = "pakman@nebtown.info";
-			string ftpPassword = "[HV[O9@5}dz3";
+			string ftpServerIP = Credentials.ftpServerIP;
+			string ftpUserName = Credentials.ftpUserName;
+			string ftpPassword = Credentials.ftpPassword;
 
 			FileInfo objFile = new FileInfo(Path.Combine(cacheFolder, filename));
 			FtpWebRequest objFTPRequest = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ftpServerIP + "/" + objFile.Name));
@@ -186,10 +186,8 @@ namespace PakMan
 			return 0;
 		}
 
-		private class ResolveVanityURLResponse
-		{
-			public class ResolveVanityURLResponseInner
-			{
+		private class ResolveVanityURLResponse {
+			public class ResolveVanityURLResponseInner {
 				public string steamid;
 				public int success;
 			}
@@ -197,13 +195,11 @@ namespace PakMan
 		}
 	}
 
-	public class Mapping
-	{
+	public class Mapping {
 		public IList<GameMapping> games { get; set; }
 	}
 
-	public class GameMapping
-	{
+	public class GameMapping {
 		public GameMapping() {
 			this.name = "?";
 			this.filename = "";
@@ -248,21 +244,18 @@ namespace PakMan
 		public string targetexe { get; set; }
 	}
 
-	public class State
-	{
+	public class State {
 		public IDictionary<string, StateMapping> games { get; set; }
 	}
 
-	public class StateMapping
-	{
+	public class StateMapping {
 		public bool ticked { get; set; }
 	}
 
 
 
 
-	public class UserSettings
-	{
+	public class UserSettings {
 		public string steamFolder;
 		public Int32 steamID = 0;
 

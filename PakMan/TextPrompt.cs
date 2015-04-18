@@ -8,10 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PakMan
-{
-	public partial class TextPrompt : Form
-	{
+namespace PakMan {
+
+	public partial class TextPrompt : Form {
 		public TextPrompt() {
 			InitializeComponent();
 		}
@@ -41,8 +40,7 @@ namespace PakMan
 			Close();
 		}
 	}
-	public class SteamIDHolder
-	{
+	public class SteamIDHolder {
 		public Int32 steamID = 0;
 	}
 }

@@ -12,12 +12,19 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+/*
+ * 
+ * == Todo ==
+ * Implement picture uploads
+ * Tie in pictures to Steam Bigpicture
+ * Dependencies (do the multiple, hierarchial approach with recursion when ticking boxes)
+ * Implement better "its installed" detection; only remove files found in the relevent archive (install log in user.json??)
+ */
 
-namespace PakMan
-{
+namespace PakMan {
 
-	public partial class MainForm : Form
-	{
+	public partial class MainForm : Form {
+
 		public MainForm() {
 			InitializeComponent();
 		}

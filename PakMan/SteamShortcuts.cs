@@ -6,10 +6,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace PakMan
-{
-	class SteamShortcuts
-	{
+namespace PakMan {
+	class SteamShortcuts {
+
 		private bool dirty = false;
 		private string shortcutsFilePath;
 
@@ -109,8 +108,7 @@ namespace PakMan
 		}
 	}
 
-	public class VDFGame
-	{
+	public class VDFGame {
 		public string name;
 		public string exe;
 		public string startdir;
