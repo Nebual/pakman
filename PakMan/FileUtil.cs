@@ -1,4 +1,5 @@
 ﻿using SevenZip;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -171,6 +172,29 @@ namespace PakMan
 				throw ex;
 			}
 		}
+
+
+
+		public static Int32 getSteamIDFromVanity(string name) {
+			using (WebClient Client = new WebClient()) {
+				string resp = Client.DownloadString("http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=16D54C8DB27D36D10F81FE0B098C7C45&vanityurl=" + name);
+				ResolveVanityURLResponse arr = JsonConvert.DeserializeObject<ResolveVanityURLResponse>(resp);
+				if (arr.response.success == 1) {
+					return (Int32)(Int64.Parse(arr.response.steamid) & 0x00000000FFFFFFFF);
+				}
+			}
+			return 0;
+		}
+
+		private class ResolveVanityURLResponse
+		{
+			public class ResolveVanityURLResponseInner
+			{
+				public string steamid;
+				public int success;
+			}
+			public ResolveVanityURLResponseInner response;
+		}
 	}
 
 	public class Mapping
@@ -232,5 +256,32 @@ namespace PakMan
 	public class StateMapping
 	{
 		public bool ticked { get; set; }
+	}
+
+
+
+
+	public class UserSettings
+	{
+		public string steamFolder;
+		public Int32 steamID = 0;
+
+		public static string UserSettingsFile = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "user.json");
+
+		public static UserSettings open() {
+			try {
+				return JsonConvert.DeserializeObject<UserSettings>(File.ReadAllText(UserSettings.UserSettingsFile));
+			}
+			catch (IOException) { }
+			return new UserSettings();
+		}
+
+		public void save() {
+			File.WriteAllText(UserSettings.UserSettingsFile, JsonConvert.SerializeObject(this, Formatting.Indented));
+		}
+
+		public string steamShortcutsPath {
+			get { return Path.Combine(new string[] { steamFolder, "userdata", steamID.ToString(), "config", "shortcuts.vdf" }); }
+		}
 	}
 }

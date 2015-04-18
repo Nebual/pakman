@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using SevenZip;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,37 @@ namespace PakMan
 
 		FileUtil F;
 		Mapping mappings;
+		UserSettings settings;
 		public Button saveMappingsPublic;
 		IDictionary<string, GameMapping> gameLookup = new Dictionary<string, GameMapping>();
 
-		// Todo: ask user for this
-		static string shortcutsFilePath = "H:\\Steam\\userdata\\33788696\\config\\shortcuts.vdf";
-
 		private void MainForm_Load(object sender, EventArgs e) {
 			saveMappingsPublic = saveMappings;
+
+			settings = UserSettings.open();
 			F = new FileUtil(this);
+
+			RegistryKey regKey;
+			if ((regKey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam")) != null) {
+				string installpath = regKey.GetValue("SteamPath").ToString().Replace("/","\\");
+				if (settings.steamFolder != installpath) {
+					log("Found Steam Folder: " + installpath);
+					settings.steamFolder = installpath;
+					settings.save();
+				}
+			}
+			if (settings.steamID == 0 && (regKey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam")) != null) {
+				string nickname = regKey.GetValue("LastGameNameUsed").ToString();
+				Int32 res;
+				if ((res = FileUtil.getSteamIDFromVanity(nickname)) > 0) {
+					log("Guessing steamid of: " + res + ", based on nickname: " + nickname);
+					settings.steamID = res;
+					settings.save();
+				}
+			}
+
+			
+
 			loadMapping();
 		}
 
@@ -56,7 +79,7 @@ namespace PakMan
 		private void apply_Click(object sender, EventArgs e) {
 			log("");
 
-			SteamShortcuts steamShortcuts = new SteamShortcuts(shortcutsFilePath);
+			SteamShortcuts steamShortcuts = new SteamShortcuts(settings.steamShortcutsPath, this.log);
 
 			foreach (DataGridViewRow row in itemList.Rows) {
 				if (row.Cells[2].Value == null) continue;
@@ -198,6 +221,16 @@ namespace PakMan
 					itemList.SelectedRows[0].Cells[0].Value = true;
 					F.uploadArchive(game.filename);
 				}
+			}
+		}
+
+		private void setSteamUsernameToolStripMenuItem_Click(object sender, EventArgs e) {
+			SteamIDHolder holder = new SteamIDHolder();
+			new TextPrompt("Enter your Steam Vanity URL (name)", holder).ShowDialog();
+			if (holder.steamID > 0) {
+				log("Found SteamID " + holder.steamID);
+				settings.steamID = holder.steamID;
+				settings.save();
 			}
 		}
 	}

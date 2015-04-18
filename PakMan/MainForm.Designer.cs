@@ -52,6 +52,9 @@
 			this.archiveBox = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.nameBox = new System.Windows.Forms.TextBox();
+			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setSteamUsernameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -62,12 +65,13 @@
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.itemList)).BeginInit();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// revertButton
 			// 
 			this.revertButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.revertButton.Location = new System.Drawing.Point(3, 301);
+			this.revertButton.Location = new System.Drawing.Point(3, 340);
 			this.revertButton.Name = "revertButton";
 			this.revertButton.Size = new System.Drawing.Size(75, 23);
 			this.revertButton.TabIndex = 1;
@@ -78,7 +82,7 @@
 			// applyButton
 			// 
 			this.applyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.applyButton.Location = new System.Drawing.Point(84, 301);
+			this.applyButton.Location = new System.Drawing.Point(84, 340);
 			this.applyButton.Name = "applyButton";
 			this.applyButton.Size = new System.Drawing.Size(75, 23);
 			this.applyButton.TabIndex = 2;
@@ -94,7 +98,7 @@
 			this.logBox.Name = "logBox";
 			this.logBox.ReadOnly = true;
 			this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.logBox.Size = new System.Drawing.Size(567, 130);
+			this.logBox.Size = new System.Drawing.Size(735, 157);
 			this.logBox.TabIndex = 3;
 			// 
 			// splitContainer1
@@ -107,18 +111,21 @@
 			// splitContainer1.Panel1
 			// 
 			this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+			this.splitContainer1.Panel1.Controls.Add(this.menuStrip1);
 			// 
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.logBox);
-			this.splitContainer1.Size = new System.Drawing.Size(567, 461);
-			this.splitContainer1.SplitterDistance = 327;
+			this.splitContainer1.Size = new System.Drawing.Size(735, 553);
+			this.splitContainer1.SplitterDistance = 392;
 			this.splitContainer1.TabIndex = 5;
 			// 
 			// splitContainer2
 			// 
-			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+			this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainer2.Location = new System.Drawing.Point(0, 24);
 			this.splitContainer2.Name = "splitContainer2";
 			// 
 			// splitContainer2.Panel1
@@ -142,8 +149,8 @@
 			this.splitContainer2.Panel2.Controls.Add(this.archiveBox);
 			this.splitContainer2.Panel2.Controls.Add(this.label1);
 			this.splitContainer2.Panel2.Controls.Add(this.nameBox);
-			this.splitContainer2.Size = new System.Drawing.Size(567, 327);
-			this.splitContainer2.SplitterDistance = 343;
+			this.splitContainer2.Size = new System.Drawing.Size(735, 366);
+			this.splitContainer2.SplitterDistance = 444;
 			this.splitContainer2.TabIndex = 3;
 			// 
 			// itemList
@@ -167,7 +174,7 @@
 			this.itemList.RowHeadersVisible = false;
 			this.itemList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.itemList.ShowEditingIcon = false;
-			this.itemList.Size = new System.Drawing.Size(336, 291);
+			this.itemList.Size = new System.Drawing.Size(437, 330);
 			this.itemList.TabIndex = 3;
 			this.itemList.SelectionChanged += new System.EventHandler(this.itemList_SelectionChanged);
 			// 
@@ -221,7 +228,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.targetExeTextBox.Location = new System.Drawing.Point(71, 109);
 			this.targetExeTextBox.Name = "targetExeTextBox";
-			this.targetExeTextBox.Size = new System.Drawing.Size(144, 20);
+			this.targetExeTextBox.Size = new System.Drawing.Size(211, 20);
 			this.targetExeTextBox.TabIndex = 11;
 			this.targetExeTextBox.TextChanged += new System.EventHandler(this.targetExeTextBox_TextChanged);
 			// 
@@ -253,7 +260,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.saveFolderTextBox.Location = new System.Drawing.Point(71, 83);
 			this.saveFolderTextBox.Name = "saveFolderTextBox";
-			this.saveFolderTextBox.Size = new System.Drawing.Size(144, 20);
+			this.saveFolderTextBox.Size = new System.Drawing.Size(211, 20);
 			this.saveFolderTextBox.TabIndex = 8;
 			this.saveFolderTextBox.TextChanged += new System.EventHandler(this.saveFolderTextBox_TextChanged);
 			// 
@@ -274,14 +281,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.installFolderTextBox.Location = new System.Drawing.Point(71, 57);
 			this.installFolderTextBox.Name = "installFolderTextBox";
-			this.installFolderTextBox.Size = new System.Drawing.Size(144, 20);
+			this.installFolderTextBox.Size = new System.Drawing.Size(211, 20);
 			this.installFolderTextBox.TabIndex = 6;
 			this.installFolderTextBox.TextChanged += new System.EventHandler(this.installFolderTextBox_TextChanged);
 			// 
 			// saveMappings
 			// 
 			this.saveMappings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.saveMappings.Location = new System.Drawing.Point(4, 301);
+			this.saveMappings.Location = new System.Drawing.Point(4, 340);
 			this.saveMappings.Name = "saveMappings";
 			this.saveMappings.Size = new System.Drawing.Size(122, 22);
 			this.saveMappings.TabIndex = 5;
@@ -316,7 +323,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.archiveBox.Location = new System.Drawing.Point(71, 31);
 			this.archiveBox.Name = "archiveBox";
-			this.archiveBox.Size = new System.Drawing.Size(144, 20);
+			this.archiveBox.Size = new System.Drawing.Size(211, 20);
 			this.archiveBox.TabIndex = 2;
 			this.archiveBox.TextChanged += new System.EventHandler(this.archiveBox_TextChanged);
 			// 
@@ -337,9 +344,34 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.nameBox.Location = new System.Drawing.Point(71, 5);
 			this.nameBox.Name = "nameBox";
-			this.nameBox.Size = new System.Drawing.Size(144, 20);
+			this.nameBox.Size = new System.Drawing.Size(211, 20);
 			this.nameBox.TabIndex = 0;
 			this.nameBox.TextChanged += new System.EventHandler(this.nameBox_TextChanged);
+			// 
+			// menuStrip1
+			// 
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem});
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(735, 24);
+			this.menuStrip1.TabIndex = 4;
+			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// optionsToolStripMenuItem
+			// 
+			this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setSteamUsernameToolStripMenuItem});
+			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+			this.optionsToolStripMenuItem.Text = "Options";
+			// 
+			// setSteamUsernameToolStripMenuItem
+			// 
+			this.setSteamUsernameToolStripMenuItem.Name = "setSteamUsernameToolStripMenuItem";
+			this.setSteamUsernameToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.setSteamUsernameToolStripMenuItem.Text = "Set Steam Username";
+			this.setSteamUsernameToolStripMenuItem.Click += new System.EventHandler(this.setSteamUsernameToolStripMenuItem_Click);
 			// 
 			// folderBrowserDialog1
 			// 
@@ -350,12 +382,13 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(567, 461);
+			this.ClientSize = new System.Drawing.Size(735, 553);
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "MainForm";
 			this.Text = "PakMan";
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
+			this.splitContainer1.Panel1.PerformLayout();
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -366,6 +399,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.itemList)).EndInit();
+			this.menuStrip1.ResumeLayout(false);
+			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
 
         }
@@ -397,6 +432,9 @@
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Button buildArchiveButton;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem setSteamUsernameToolStripMenuItem;
     }
 }
 

@@ -15,8 +15,13 @@ namespace PakMan
 
 		IDictionary<string, VDFGame> games;
 
-		public SteamShortcuts(string shortcutsFilePath) {
+		public SteamShortcuts(string shortcutsFilePath, Action<string, string> log) {
 			this.shortcutsFilePath = shortcutsFilePath;
+
+			if (!File.Exists(shortcutsFilePath)) {
+				log("Error: Cannot find Steam userdata folder; have you setup your username in Options?", "\r\n");
+				return;
+			}
 
 			games = readShortcutVDF();
 		}
@@ -78,6 +83,7 @@ namespace PakMan
 		}
 
 		public void addGame(GameMapping game) {
+			if (games == null) return;
 			if (!games.ContainsKey(game.name) && game.targetexe.Length > 0) {
 				games.Add(game.name, new VDFGame(game));
 				dirty = true;
@@ -85,6 +91,7 @@ namespace PakMan
 		}
 
 		public void removeGame(GameMapping game) {
+			if (games == null) return;
 			if (games.ContainsKey(game.name)) {
 				games.Remove(game.name);
 				dirty = true;
@@ -92,6 +99,7 @@ namespace PakMan
 		}
 
 		public bool flush() {
+			if (games == null) return false;
 			if (dirty) {
 				writeShortcutVDF();
 				dirty = false;
