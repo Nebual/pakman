@@ -83,7 +83,7 @@ namespace PakMan {
 			File.WriteAllText(shortcutsFilePath, outbuf);
 		}
 
-		public void addGame(GameMapping game) {
+		public void addGame(Game game) {
 			if (games == null) return;
 			if (!games.ContainsKey(game.name) && game.targetexe.Length > 0) {
 				games.Add(game.name, new VDFGame(game));
@@ -95,7 +95,7 @@ namespace PakMan {
 			}
 		}
 
-		public void removeGame(GameMapping game) {
+		public void removeGame(Game game) {
 			if (games == null) return;
 			if (games.ContainsKey(game.name)) {
 				games.Remove(game.name);
@@ -130,7 +130,7 @@ namespace PakMan {
 		}
 
 		public VDFGame() { }
-		public VDFGame(GameMapping game) {
+		public VDFGame(Game game) {
 			name = game.name;
 			startdir = Path.GetFullPath(game.installfolder);
 			exe = Path.Combine(Path.GetFullPath(game.installfolder), game.targetexe);

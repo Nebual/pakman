@@ -11,21 +11,21 @@ using System.Threading.Tasks;
 
 namespace PakMan {
 
-	public class Mapping {
-		public IList<GameMapping> games { get; set; }
+	public class Games {
+		public IList<Game> games { get; set; }
 
-		public static Mapping open() {
+		public static Games open() {
 			if (!File.Exists("mappings.json")) FileUtil.download("mappings.json", "mappings.json");
-			return JsonConvert.DeserializeObject<Mapping>(File.ReadAllText("mappings.json"));
+			return JsonConvert.DeserializeObject<Games>(File.ReadAllText("mappings.json"));
 		}
 	}
 
-	public class GameMapping {
+	public class Game {
 		[JsonIgnore]
 		public static MainForm context;
 
 
-		public GameMapping() {
+		public Game() {
 			this.name = "?";
 			this.archive_filename = "";
 			this.detection_filename = "";
@@ -37,7 +37,7 @@ namespace PakMan {
 			this.dependencies = "";
 			this.description = "";
 		}
-		public GameMapping(string name)
+		public Game(string name)
 			: this() {
 			this.name = name;
 		}
@@ -98,7 +98,7 @@ namespace PakMan {
 			string filePath = Path.Combine(FileUtil.getCacheFolder(), name + ".png");
 			if (!File.Exists(filePath)) {
 				try {
-					new FileUtil().downloadArchive(name + ".png");
+					FileUtil.downloadArchive(name + ".png");
 				}
 				catch (WebException ex) {
 					if (((ex.Response) as HttpWebResponse).StatusCode != HttpStatusCode.NotFound) {

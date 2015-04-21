@@ -40,6 +40,7 @@
 			this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.archiveSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.gameSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.purgeMappingsButton = new System.Windows.Forms.Button();
 			this.descriptionTextBox = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.imageButton = new PakMan.AutoScaleButton();
@@ -63,7 +64,7 @@
 			this.setSteamUsernameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-			this.purgeMappingsButton = new System.Windows.Forms.Button();
+			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -233,6 +234,16 @@
 			this.gameSize.Name = "gameSize";
 			this.gameSize.ReadOnly = true;
 			this.gameSize.Width = 70;
+			// 
+			// purgeMappingsButton
+			// 
+			this.purgeMappingsButton.Location = new System.Drawing.Point(140, 339);
+			this.purgeMappingsButton.Name = "purgeMappingsButton";
+			this.purgeMappingsButton.Size = new System.Drawing.Size(23, 23);
+			this.purgeMappingsButton.TabIndex = 18;
+			this.purgeMappingsButton.Text = "X";
+			this.purgeMappingsButton.UseVisualStyleBackColor = true;
+			this.purgeMappingsButton.Click += new System.EventHandler(this.purgeMappingsButton_Click);
 			// 
 			// descriptionTextBox
 			// 
@@ -442,7 +453,8 @@
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setSteamUsernameToolStripMenuItem});
+            this.setSteamUsernameToolStripMenuItem,
+            this.checkForUpdatesToolStripMenuItem});
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
 			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
 			this.optionsToolStripMenuItem.Text = "Options";
@@ -463,15 +475,12 @@
 			// 
 			this.openFileDialog1.FileName = "openFileDialog1";
 			// 
-			// purgeMappingsButton
+			// checkForUpdatesToolStripMenuItem
 			// 
-			this.purgeMappingsButton.Location = new System.Drawing.Point(140, 339);
-			this.purgeMappingsButton.Name = "purgeMappingsButton";
-			this.purgeMappingsButton.Size = new System.Drawing.Size(23, 23);
-			this.purgeMappingsButton.TabIndex = 18;
-			this.purgeMappingsButton.Text = "X";
-			this.purgeMappingsButton.UseVisualStyleBackColor = true;
-			this.purgeMappingsButton.Click += new System.EventHandler(this.purgeMappingsButton_Click);
+			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+			this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
+			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -538,6 +547,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn archiveSize;
 		private System.Windows.Forms.DataGridViewTextBoxColumn gameSize;
 		private System.Windows.Forms.Button purgeMappingsButton;
+		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
     }
 }
 

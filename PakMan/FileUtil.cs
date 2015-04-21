@@ -13,39 +13,17 @@ using System.Collections.ObjectModel;
 
 namespace PakMan
 {
-	class FileUtil
+	static class FileUtil
 	{
-		public string cacheFolder;
 		public static string getCacheFolder() {return Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "archive_cache");}
 		public static string getCacheFolder(string p) {
 			return Path.Combine(getCacheFolder(), p);
 		}
 
-		static MainForm context;
+		public static MainForm context;
 
-		private bool _dirty;
-		public bool dirty {
-			get { return _dirty; }
-			set {
-				if (value != _dirty) {
-					_dirty = value;
-					context.saveMappingsPublic.Text = (_dirty ? "* " : "") + context.saveMappingsPublic.Text.TrimStart(new char[] { '*', ' ' });
-				}
-			}
-		}
-
-		public FileUtil() {
-			cacheFolder = getCacheFolder();
-			System.IO.Directory.CreateDirectory(cacheFolder);
-		}
-
-		public FileUtil(MainForm context) : this() {
-			FileUtil.context = context;
-		}
-
-
-		public void log(string text, string suffix="\r\n") {
-			if(context != null) context.log(text, suffix);
+		public static void init() {
+			Directory.CreateDirectory(getCacheFolder());
 		}
 
 		public static long GetDirectorySize(string parentDirectory) {
@@ -64,26 +42,25 @@ namespace PakMan
 				Client.DownloadFile("http://nebtown.info/pakman/" + filename, savepath);
 			}
 		}
-		public void downloadArchive(string archiveName, bool overwrite = false) {
+		public static void downloadArchive(string archiveName, bool overwrite = false) {
 			if (archiveName.Length == 0) {
-				log("Error Cannot Download: Invalid archiveName");
+				context.log("Error Cannot Download: Invalid archiveName");
 				return;
 			}
 			if (overwrite || !archiveExists(archiveName)) {
-				log("Downloading " + archiveName, "...");
-				download(archiveName, Path.Combine(cacheFolder, archiveName));
-				log(" done.");
+				context.log("Downloading " + archiveName, "...");
+				download(archiveName, getCacheFolder(archiveName));
+				context.log(" done.");
 			}
 		}
-		public void deleteArchive(string archiveName) {
-			if (archiveName.Length == 0) {
-				//log("Error Cannot Delete: Invalid archiveName");
-				return;
-			}
-			if (archiveExists(archiveName)) {
-				log("Deleting archive " + archiveName, "...");
-				File.Delete(Path.Combine(cacheFolder, archiveName));
-				log(" done.");
+		public static void deleteArchive(string archiveName) {
+			context.log("Deleting archive " + archiveName, "...");
+			delete(archiveName);
+			context.log(" done.");
+		}
+		public static void delete(string fileName) {
+			if (fileName.Length != 0 && archiveExists(fileName)) {
+				File.Delete(getCacheFolder(fileName));
 			}
 		}
 
@@ -105,15 +82,15 @@ namespace PakMan
 			return string.Format("{0:n1} {1}", adjustedSize, SizeSuffixes[mag]);
 		}
 
-		public void createArchive(string archiveName, string folderPath) {
-			log("Creating archive " + archiveName, " ...");
+		public static void createArchive(string archiveName, string folderPath) {
+			context.log("Creating archive " + archiveName, " ...");
 			SevenZipCompressor compressor = new SevenZipCompressor();
 			compressor.CompressionLevel = CompressionLevel.Ultra;
 			compressor.CompressionMethod = CompressionMethod.Lzma;
 			compressor.CompressionMode = CompressionMode.Create;
 			compressor.IncludeEmptyDirectories = true;
-			compressor.CompressDirectory(folderPath, Path.Combine(cacheFolder, archiveName), true);
-			log(" done.");
+			compressor.CompressDirectory(folderPath, getCacheFolder(archiveName), true);
+			context.log(" done.");
 		}
 
 		public static List<string> archiveGetFilenames(string archiveName) {
@@ -122,13 +99,14 @@ namespace PakMan
 			}
 		}
 
-		public void uploadArchive(string filename) {
-			log("Uploading archive " + filename, " ...");
-			FileInfo objFile = new FileInfo(Path.Combine(cacheFolder, filename));
+		public static void uploadArchive(string filename) {
+			context.log("Uploading archive " + filename, " ...");
+			FileInfo objFile = new FileInfo(getCacheFolder(filename));
 			upload(objFile.Name, objFile.OpenRead());
+			context.log(" done");
 		}
 
-		public void upload(string filename, Stream objFileStream) {
+		public static void upload(string filename, Stream objFileStream) {
 			string ftpServerIP = Credentials.ftpServerIP;
 			string ftpUserName = Credentials.ftpUserName;
 			string ftpPassword = Credentials.ftpPassword;
@@ -143,21 +121,15 @@ namespace PakMan
 			int intBufferLength = 16 * 1024;
 			byte[] objBuffer = new byte[intBufferLength];
 
-			try {
-				Stream objStream = objFTPRequest.GetRequestStream();
+			Stream objStream = objFTPRequest.GetRequestStream();
 
-				int len = 0;
-				while ((len = objFileStream.Read(objBuffer, 0, intBufferLength)) != 0) {
-					objStream.Write(objBuffer, 0, len);
-				}
+			int len = 0;
+			while ((len = objFileStream.Read(objBuffer, 0, intBufferLength)) != 0) {
+				objStream.Write(objBuffer, 0, len);
+			}
 
-				objStream.Close();
-				objFileStream.Close();
-				log(" done");
-			}
-			catch (Exception ex) {
-				throw ex;
-			}
+			objStream.Close();
+			objFileStream.Close();
 		}
 
 
@@ -202,16 +174,6 @@ namespace PakMan
 			}
 		}
 	}
-
-	public class State {
-		public IDictionary<string, StateMapping> games { get; set; }
-	}
-
-	public class StateMapping {
-		public bool ticked { get; set; }
-	}
-
-
 
 
 	public class UserSettings {
