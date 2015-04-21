@@ -11,11 +11,13 @@ namespace PakMan {
 
 		private bool dirty = false;
 		private string shortcutsFilePath;
+		private string gridFilePath;
 
 		IDictionary<string, VDFGame> games;
 
-		public SteamShortcuts(string shortcutsFilePath, Action<string, string> log) {
+		public SteamShortcuts(string shortcutsFilePath, string gridFilePath, Action<string, string> log) {
 			this.shortcutsFilePath = shortcutsFilePath;
+			this.gridFilePath = gridFilePath;
 
 			if (!File.Exists(shortcutsFilePath)) {
 				log("Error: Cannot find Steam userdata folder; have you setup your username in Options?", "\r\n");
@@ -85,6 +87,10 @@ namespace PakMan {
 			if (games == null) return;
 			if (!games.ContainsKey(game.name) && game.targetexe.Length > 0) {
 				games.Add(game.name, new VDFGame(game));
+
+				if (game.image != null) {
+					games[game.name].copyImageToGrid(gridFilePath);
+				}
 				dirty = true;
 			}
 		}
@@ -115,7 +121,7 @@ namespace PakMan {
 		private string _gameid;
 		public string gameid {
 			get {
-				if (_gameid.Length > 0) return _gameid;
+				if (_gameid != null && _gameid.Length > 0) return _gameid;
 				// Calculate the bullshit goddamn stupid gameid Steam uses for custom BigPicture banner image filenames
 				UInt64 hash = (UInt64)CRC32.Compute(exe + name);
 				_gameid = ((hash | 0x80000000) << 32 | 0x02000000).ToString();
@@ -131,6 +137,10 @@ namespace PakMan {
 		}
 		public override string ToString() {
 			return name + " - " + exe + " - " + startdir;
+		}
+
+		public void copyImageToGrid(string steamGridPath) {
+			File.Copy(FileUtil.getCacheFolder(name + ".png"), Path.Combine(steamGridPath, gameid + ".png"), true);
 		}
 	}
 }

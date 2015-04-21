@@ -31,7 +31,7 @@ namespace PakMan {
 
 		FileUtil F;
 		Mapping mappings;
-		UserSettings settings;
+		public UserSettings settings;
 		public Button saveMappingsPublic;
 		IDictionary<string, GameMapping> gameLookup = new Dictionary<string, GameMapping>();
 
@@ -60,8 +60,6 @@ namespace PakMan {
 				}
 			}
 
-			
-
 			loadMapping();
 		}
 
@@ -86,7 +84,7 @@ namespace PakMan {
 		private void apply_Click(object sender, EventArgs e) {
 			log("");
 
-			SteamShortcuts steamShortcuts = new SteamShortcuts(settings.steamShortcutsPath, this.log);
+			SteamShortcuts steamShortcuts = new SteamShortcuts(settings.steamShortcutsPath, settings.steamGridPath, this.log);
 
 			foreach (DataGridViewRow row in itemList.Rows) {
 				if (row.Cells[2].Value == null) continue;
@@ -154,6 +152,10 @@ namespace PakMan {
 			saveFolderTextBox.Text = game.savefolder;
 			installFolderTextBox.Text = game.installfolder;
 			targetExeTextBox.Text = game.targetexe;
+			imageButton.AutoScaleImage = game.image != null ? game.image : FileUtil.selectImageText;
+			
+			dependsTextBox.Text = game.dependencies;
+			descriptionTextBox.Text = game.description;
 		}
 
 		private void addNewItemButton_Click(object sender, EventArgs e) {
@@ -215,6 +217,22 @@ namespace PakMan {
 			}
 		}
 
+		private void dependsTextBox_TextChanged(object sender, EventArgs e) {
+			GameMapping game = selectedGame();
+			if (game.dependencies != dependsTextBox.Text) {
+				game.dependencies = dependsTextBox.Text;
+				F.dirty = true;
+			}
+		}
+
+		private void descriptionTextBox_TextChanged(object sender, EventArgs e) {
+			GameMapping game = selectedGame();
+			if (game.description != descriptionTextBox.Text) {
+				game.description = descriptionTextBox.Text;
+				F.dirty = true;
+			}
+		}
+
 		private void buildArchiveButton_Click(object sender, EventArgs e) {
 			GameMapping game = selectedGame();
 			if (game.name == "New" || game.filename.Length == 0) {
@@ -238,6 +256,20 @@ namespace PakMan {
 				log("Found SteamID " + holder.steamID);
 				settings.steamID = holder.steamID;
 				settings.save();
+			}
+		}
+
+		private void imageButton_Click(object sender, EventArgs e) {
+			if(openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+				GameMapping game = selectedGame();
+
+				Image b = Image.FromStream(openFileDialog1.OpenFile());
+				b.Save(Path.Combine(F.cacheFolder, game.name + ".png"));
+				game.image = b;
+				imageButton.AutoScaleImage = b;
+
+				if (settings.steamID != 0) { new VDFGame(game).copyImageToGrid(settings.steamGridPath); }
+				F.uploadArchive(game.name + ".png");
 			}
 		}
 	}

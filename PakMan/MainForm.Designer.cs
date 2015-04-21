@@ -34,11 +34,8 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.itemList = new System.Windows.Forms.DataGridView();
-			this.D = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.I = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.gameName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.archiveSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.gameSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.dependsTextBox = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
 			this.buildArchiveButton = new System.Windows.Forms.Button();
 			this.targetExeTextBox = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
@@ -56,6 +53,16 @@
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.setSteamUsernameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+			this.descriptionTextBox = new System.Windows.Forms.TextBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.imageButton = new PakMan.AutoScaleButton();
+			this.D = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.I = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.gameName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.archiveSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.gameSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -98,7 +105,7 @@
 			this.logBox.Name = "logBox";
 			this.logBox.ReadOnly = true;
 			this.logBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.logBox.Size = new System.Drawing.Size(735, 157);
+			this.logBox.Size = new System.Drawing.Size(815, 157);
 			this.logBox.TabIndex = 3;
 			// 
 			// splitContainer1
@@ -116,7 +123,7 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.logBox);
-			this.splitContainer1.Size = new System.Drawing.Size(735, 553);
+			this.splitContainer1.Size = new System.Drawing.Size(815, 553);
 			this.splitContainer1.SplitterDistance = 392;
 			this.splitContainer1.TabIndex = 5;
 			// 
@@ -125,6 +132,7 @@
 			this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
 			this.splitContainer2.Location = new System.Drawing.Point(0, 24);
 			this.splitContainer2.Name = "splitContainer2";
 			// 
@@ -136,6 +144,11 @@
 			// 
 			// splitContainer2.Panel2
 			// 
+			this.splitContainer2.Panel2.Controls.Add(this.descriptionTextBox);
+			this.splitContainer2.Panel2.Controls.Add(this.label7);
+			this.splitContainer2.Panel2.Controls.Add(this.imageButton);
+			this.splitContainer2.Panel2.Controls.Add(this.dependsTextBox);
+			this.splitContainer2.Panel2.Controls.Add(this.label6);
 			this.splitContainer2.Panel2.Controls.Add(this.buildArchiveButton);
 			this.splitContainer2.Panel2.Controls.Add(this.targetExeTextBox);
 			this.splitContainer2.Panel2.Controls.Add(this.label5);
@@ -149,8 +162,8 @@
 			this.splitContainer2.Panel2.Controls.Add(this.archiveBox);
 			this.splitContainer2.Panel2.Controls.Add(this.label1);
 			this.splitContainer2.Panel2.Controls.Add(this.nameBox);
-			this.splitContainer2.Size = new System.Drawing.Size(735, 366);
-			this.splitContainer2.SplitterDistance = 444;
+			this.splitContainer2.Size = new System.Drawing.Size(815, 366);
+			this.splitContainer2.SplitterDistance = 523;
 			this.splitContainer2.TabIndex = 3;
 			// 
 			// itemList
@@ -166,6 +179,7 @@
             this.D,
             this.I,
             this.gameName,
+            this.Description,
             this.archiveSize,
             this.gameSize});
 			this.itemList.Location = new System.Drawing.Point(4, 4);
@@ -174,49 +188,39 @@
 			this.itemList.RowHeadersVisible = false;
 			this.itemList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.itemList.ShowEditingIcon = false;
-			this.itemList.Size = new System.Drawing.Size(437, 330);
+			this.itemList.Size = new System.Drawing.Size(516, 330);
 			this.itemList.TabIndex = 3;
 			this.itemList.SelectionChanged += new System.EventHandler(this.itemList_SelectionChanged);
 			// 
-			// D
+			// dependsTextBox
 			// 
-			this.D.HeaderText = "D";
-			this.D.Name = "D";
-			this.D.Width = 20;
+			this.dependsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dependsTextBox.Location = new System.Drawing.Point(71, 135);
+			this.dependsTextBox.Name = "dependsTextBox";
+			this.dependsTextBox.Size = new System.Drawing.Size(202, 20);
+			this.dependsTextBox.TabIndex = 14;
+			this.dependsTextBox.TextChanged += new System.EventHandler(this.dependsTextBox_TextChanged);
 			// 
-			// I
+			// label6
 			// 
-			this.I.HeaderText = "I";
-			this.I.Name = "I";
-			this.I.Width = 20;
-			// 
-			// gameName
-			// 
-			this.gameName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.gameName.HeaderText = "Name";
-			this.gameName.Name = "gameName";
-			this.gameName.ReadOnly = true;
-			// 
-			// archiveSize
-			// 
-			this.archiveSize.HeaderText = "7z Size";
-			this.archiveSize.Name = "archiveSize";
-			this.archiveSize.ReadOnly = true;
-			this.archiveSize.Width = 70;
-			// 
-			// gameSize
-			// 
-			this.gameSize.HeaderText = "G Size";
-			this.gameSize.Name = "gameSize";
-			this.gameSize.ReadOnly = true;
-			this.gameSize.Width = 70;
+			this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(18, 138);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(53, 13);
+			this.label6.TabIndex = 13;
+			this.label6.Text = "Depends:";
 			// 
 			// buildArchiveButton
 			// 
+			this.buildArchiveButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.buildArchiveButton.Cursor = System.Windows.Forms.Cursors.Default;
-			this.buildArchiveButton.Location = new System.Drawing.Point(4, 136);
+			this.buildArchiveButton.Location = new System.Drawing.Point(12, 187);
 			this.buildArchiveButton.Name = "buildArchiveButton";
-			this.buildArchiveButton.Size = new System.Drawing.Size(211, 23);
+			this.buildArchiveButton.Size = new System.Drawing.Size(261, 23);
 			this.buildArchiveButton.TabIndex = 12;
 			this.buildArchiveButton.Text = "Browse, Compress, and Upload";
 			this.buildArchiveButton.UseVisualStyleBackColor = true;
@@ -228,7 +232,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.targetExeTextBox.Location = new System.Drawing.Point(71, 109);
 			this.targetExeTextBox.Name = "targetExeTextBox";
-			this.targetExeTextBox.Size = new System.Drawing.Size(211, 20);
+			this.targetExeTextBox.Size = new System.Drawing.Size(202, 20);
 			this.targetExeTextBox.TabIndex = 11;
 			this.targetExeTextBox.TextChanged += new System.EventHandler(this.targetExeTextBox_TextChanged);
 			// 
@@ -260,7 +264,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.saveFolderTextBox.Location = new System.Drawing.Point(71, 83);
 			this.saveFolderTextBox.Name = "saveFolderTextBox";
-			this.saveFolderTextBox.Size = new System.Drawing.Size(211, 20);
+			this.saveFolderTextBox.Size = new System.Drawing.Size(202, 20);
 			this.saveFolderTextBox.TabIndex = 8;
 			this.saveFolderTextBox.TextChanged += new System.EventHandler(this.saveFolderTextBox_TextChanged);
 			// 
@@ -281,14 +285,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.installFolderTextBox.Location = new System.Drawing.Point(71, 57);
 			this.installFolderTextBox.Name = "installFolderTextBox";
-			this.installFolderTextBox.Size = new System.Drawing.Size(211, 20);
+			this.installFolderTextBox.Size = new System.Drawing.Size(202, 20);
 			this.installFolderTextBox.TabIndex = 6;
 			this.installFolderTextBox.TextChanged += new System.EventHandler(this.installFolderTextBox_TextChanged);
 			// 
 			// saveMappings
 			// 
 			this.saveMappings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.saveMappings.Location = new System.Drawing.Point(4, 340);
+			this.saveMappings.Location = new System.Drawing.Point(12, 340);
 			this.saveMappings.Name = "saveMappings";
 			this.saveMappings.Size = new System.Drawing.Size(122, 22);
 			this.saveMappings.TabIndex = 5;
@@ -323,7 +327,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.archiveBox.Location = new System.Drawing.Point(71, 31);
 			this.archiveBox.Name = "archiveBox";
-			this.archiveBox.Size = new System.Drawing.Size(211, 20);
+			this.archiveBox.Size = new System.Drawing.Size(202, 20);
 			this.archiveBox.TabIndex = 2;
 			this.archiveBox.TextChanged += new System.EventHandler(this.archiveBox_TextChanged);
 			// 
@@ -344,7 +348,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.nameBox.Location = new System.Drawing.Point(71, 5);
 			this.nameBox.Name = "nameBox";
-			this.nameBox.Size = new System.Drawing.Size(211, 20);
+			this.nameBox.Size = new System.Drawing.Size(202, 20);
 			this.nameBox.TabIndex = 0;
 			this.nameBox.TextChanged += new System.EventHandler(this.nameBox_TextChanged);
 			// 
@@ -354,7 +358,7 @@
             this.optionsToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(735, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(815, 24);
 			this.menuStrip1.TabIndex = 4;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -378,11 +382,90 @@
 			this.folderBrowserDialog1.Description = "Select the game\'s folder, to be 7z\'d and uploaded";
 			this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.MyComputer;
 			// 
+			// openFileDialog1
+			// 
+			this.openFileDialog1.FileName = "openFileDialog1";
+			// 
+			// descriptionTextBox
+			// 
+			this.descriptionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.descriptionTextBox.Location = new System.Drawing.Point(71, 161);
+			this.descriptionTextBox.Name = "descriptionTextBox";
+			this.descriptionTextBox.Size = new System.Drawing.Size(202, 20);
+			this.descriptionTextBox.TabIndex = 17;
+			this.descriptionTextBox.TextChanged += new System.EventHandler(this.descriptionTextBox_TextChanged);
+			// 
+			// label7
+			// 
+			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(8, 164);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(63, 13);
+			this.label7.TabIndex = 16;
+			this.label7.Text = "Description:";
+			// 
+			// imageButton
+			// 
+			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.imageButton.AutoScaleBorder = 0;
+			this.imageButton.AutoScaleImage = null;
+			this.imageButton.Location = new System.Drawing.Point(12, 216);
+			this.imageButton.Name = "imageButton";
+			this.imageButton.Size = new System.Drawing.Size(261, 118);
+			this.imageButton.TabIndex = 15;
+			this.imageButton.Text = "Image";
+			this.imageButton.UseVisualStyleBackColor = true;
+			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
+			// 
+			// D
+			// 
+			this.D.HeaderText = "D";
+			this.D.Name = "D";
+			this.D.Width = 20;
+			// 
+			// I
+			// 
+			this.I.HeaderText = "I";
+			this.I.Name = "I";
+			this.I.Width = 20;
+			// 
+			// gameName
+			// 
+			this.gameName.HeaderText = "Name";
+			this.gameName.Name = "gameName";
+			this.gameName.ReadOnly = true;
+			this.gameName.Width = 150;
+			// 
+			// Description
+			// 
+			this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.Description.HeaderText = "Description";
+			this.Description.Name = "Description";
+			this.Description.ReadOnly = true;
+			// 
+			// archiveSize
+			// 
+			this.archiveSize.HeaderText = "7z Size";
+			this.archiveSize.Name = "archiveSize";
+			this.archiveSize.ReadOnly = true;
+			this.archiveSize.Width = 70;
+			// 
+			// gameSize
+			// 
+			this.gameSize.HeaderText = "G Size";
+			this.gameSize.Name = "gameSize";
+			this.gameSize.ReadOnly = true;
+			this.gameSize.Width = 70;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(735, 553);
+			this.ClientSize = new System.Drawing.Size(815, 553);
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "MainForm";
 			this.Text = "PakMan";
@@ -423,11 +506,6 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox installFolderTextBox;
 		private System.Windows.Forms.DataGridView itemList;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn D;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn I;
-		private System.Windows.Forms.DataGridViewTextBoxColumn gameName;
-		private System.Windows.Forms.DataGridViewTextBoxColumn archiveSize;
-		private System.Windows.Forms.DataGridViewTextBoxColumn gameSize;
 		private System.Windows.Forms.TextBox targetExeTextBox;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Button buildArchiveButton;
@@ -435,6 +513,18 @@
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem setSteamUsernameToolStripMenuItem;
+		private AutoScaleButton imageButton;
+		private System.Windows.Forms.TextBox dependsTextBox;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.OpenFileDialog openFileDialog1;
+		private System.Windows.Forms.TextBox descriptionTextBox;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn D;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn I;
+		private System.Windows.Forms.DataGridViewTextBoxColumn gameName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Description;
+		private System.Windows.Forms.DataGridViewTextBoxColumn archiveSize;
+		private System.Windows.Forms.DataGridViewTextBoxColumn gameSize;
     }
 }
 

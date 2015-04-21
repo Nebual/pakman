@@ -107,7 +107,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoScaleButton.cs" />
     <Compile Include="CRC32.cs" />
+    <Compile Include="Credentials.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Credentials.resx</DependentUpon>
+    </Compile>
     <Compile Include="FileUtil.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -124,6 +130,10 @@
     <Compile Include="TextPrompt.Designer.cs">
       <DependentUpon>TextPrompt.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Credentials.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Credentials.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -135,6 +145,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="mappings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

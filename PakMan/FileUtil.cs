@@ -8,14 +8,19 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace PakMan
 {
 	class FileUtil
 	{
 		public string cacheFolder;
+		public static string getCacheFolder() {return Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "archive_cache");}
+		public static string getCacheFolder(string p) {
+			return Path.Combine(getCacheFolder(), p);
+		}
 
-		MainForm context;
+		static MainForm context;
 
 		private bool _dirty;
 		public bool dirty {
@@ -28,15 +33,18 @@ namespace PakMan
 			}
 		}
 
-		public FileUtil(MainForm context) {
-			this.context = context;
-			cacheFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "archive_cache");
+		public FileUtil() {
+			cacheFolder = getCacheFolder();
 			System.IO.Directory.CreateDirectory(cacheFolder);
+		}
+
+		public FileUtil(MainForm context) : this() {
+			FileUtil.context = context;
 		}
 
 
 		public void log(string text, string suffix="\r\n") {
-			context.log(text, suffix);
+			if(context != null) context.log(text, suffix);
 		}
 
 		public static long GetDirectorySize(string parentDirectory) {
@@ -140,22 +148,25 @@ namespace PakMan
 
 		public void uploadArchive(string filename) {
 			log("Uploading archive " + filename, " ...");
+			FileInfo objFile = new FileInfo(Path.Combine(cacheFolder, filename));
+			upload(objFile.Name, objFile.OpenRead());
+		}
+
+		public void upload(string filename, Stream objFileStream) {
 			string ftpServerIP = Credentials.ftpServerIP;
 			string ftpUserName = Credentials.ftpUserName;
 			string ftpPassword = Credentials.ftpPassword;
 
-			FileInfo objFile = new FileInfo(Path.Combine(cacheFolder, filename));
-			FtpWebRequest objFTPRequest = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ftpServerIP + "/" + objFile.Name));
+			FtpWebRequest objFTPRequest = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + ftpServerIP + "/" + filename));
 			objFTPRequest.Credentials = new NetworkCredential(ftpUserName, ftpPassword);
 			objFTPRequest.KeepAlive = false; // Should the control connection be closed after a command is executed.
 			objFTPRequest.UseBinary = true;
-			objFTPRequest.ContentLength = objFile.Length;
+			objFTPRequest.ContentLength = objFileStream.Length;
 			objFTPRequest.Method = WebRequestMethods.Ftp.UploadFile;
 
 			int intBufferLength = 16 * 1024;
 			byte[] objBuffer = new byte[intBufferLength];
 
-			FileStream objFileStream = objFile.OpenRead();
 			try {
 				Stream objStream = objFTPRequest.GetRequestStream();
 
@@ -193,6 +204,27 @@ namespace PakMan
 			}
 			public ResolveVanityURLResponseInner response;
 		}
+
+		public static Bitmap ConvertTextToImage(string txt, int width, int Height, string fontname="Bookman Old Style", int fontsize=10) {
+			Bitmap bmp = new Bitmap(width, Height);
+			using (Graphics graphics = Graphics.FromImage(bmp)) {
+				Font font = new Font(fontname, fontsize);
+				graphics.FillRectangle(new SolidBrush(Color.White), 0, 0, bmp.Width, bmp.Height);
+				graphics.DrawString(txt, font, new SolidBrush(Color.Black), 0, 0);
+				graphics.Flush();
+				font.Dispose();
+				graphics.Dispose();
+			}
+			return bmp;
+		}
+
+		private static Bitmap _selectImageText;
+		public static Bitmap selectImageText {
+			get{
+				if(_selectImageText == null) {_selectImageText = FileUtil.ConvertTextToImage("Select Image", 200, 100);}
+				return _selectImageText;
+			}
+		}
 	}
 
 	public class Mapping {
@@ -208,12 +240,18 @@ namespace PakMan
 			this.archive_size = 0;
 			this.extracted_size = 0;
 			this.targetexe = "";
+			this.dependencies = "";
+			this.description = "";
 		}
 		public GameMapping(string name) : this() {
 			this.name = name;
 		}
 
 		public string name { get; set; }
+		public string dependencies { get; set; }
+		public string description { get; set; }
+		public string detection_filename { get; set; }
+
 		private string _filename;
 		public string filename {
 			get { return _filename; }
@@ -242,6 +280,38 @@ namespace PakMan
 		}
 		public long extracted_size { get; set; }
 		public string targetexe { get; set; }
+
+		[JsonIgnore]
+		private Image _image;
+		[JsonIgnore]
+		public Image image {
+			get {
+				if (_image != null) return _image;
+				_image = gen_image();
+				return _image;
+			}
+			set {
+				_image = value;
+			}
+		}
+
+		private System.Drawing.Image gen_image() {
+			string filePath = Path.Combine(FileUtil.getCacheFolder(), name + ".png");
+			if(!File.Exists(filePath)) {
+				try {
+					new FileUtil().downloadArchive(name + ".png");
+				}
+				catch (WebException ex) {
+					if (((ex.Response) as HttpWebResponse).StatusCode != HttpStatusCode.NotFound) {
+						throw ex;
+					}
+				}
+			}
+			if(File.Exists(filePath)) {
+				return Image.FromStream(new MemoryStream(File.ReadAllBytes(filePath)));
+			}
+			return null;
+		}
 	}
 
 	public class State {
@@ -273,8 +343,15 @@ namespace PakMan
 			File.WriteAllText(UserSettings.UserSettingsFile, JsonConvert.SerializeObject(this, Formatting.Indented));
 		}
 
+		public string steamUserdataPath {
+			get { return Path.Combine(steamFolder, "userdata", steamID.ToString()); }
+		}
+
 		public string steamShortcutsPath {
-			get { return Path.Combine(new string[] { steamFolder, "userdata", steamID.ToString(), "config", "shortcuts.vdf" }); }
+			get { return Path.Combine(steamUserdataPath, "config", "shortcuts.vdf"); }
+		}
+		public string steamGridPath {
+			get { return Path.Combine(steamUserdataPath, "config", "grid"); }
 		}
 	}
 }
