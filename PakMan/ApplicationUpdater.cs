@@ -44,14 +44,8 @@ namespace PakMan
 			else if (info.UpdateAvailable) {
 				if (silent || MessageBox.Show("New update: v" + info.AvailableVersion + ", update?", Application.ProductName + " Updater", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) {
 					ad.Update();
-					//Application.ExitThread();   
-					MessageBox.Show("About to");
 					Application.Restart();
-					MessageBox.Show("Uhm");
-					Application.Exit();
-					MessageBox.Show("UHHH");
-					Environment.Exit(0);
-					MessageBox.Show("YOU'RE DEAD NOW, RIGHT");
+					Environment.Exit(0); // Needed on startup...
 				}
 			}
 			else if (!silent) {

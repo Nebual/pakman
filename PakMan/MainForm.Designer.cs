@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.revertButton = new System.Windows.Forms.Button();
 			this.applyButton = new System.Windows.Forms.Button();
 			this.logBox = new System.Windows.Forms.TextBox();
@@ -43,7 +44,6 @@
 			this.purgeMappingsButton = new System.Windows.Forms.Button();
 			this.descriptionTextBox = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
-			this.imageButton = new PakMan.AutoScaleButton();
 			this.dependsTextBox = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.buildArchiveButton = new System.Windows.Forms.Button();
@@ -65,6 +65,9 @@
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+			this.imageButton = new PakMan.AutoScaleButton();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -83,7 +86,7 @@
 			this.revertButton.Location = new System.Drawing.Point(3, 340);
 			this.revertButton.Name = "revertButton";
 			this.revertButton.Size = new System.Drawing.Size(75, 23);
-			this.revertButton.TabIndex = 1;
+			this.revertButton.TabIndex = 20;
 			this.revertButton.Text = "Revert";
 			this.revertButton.UseVisualStyleBackColor = true;
 			this.revertButton.Click += new System.EventHandler(this.revertButton_Click);
@@ -94,7 +97,7 @@
 			this.applyButton.Location = new System.Drawing.Point(84, 340);
 			this.applyButton.Name = "applyButton";
 			this.applyButton.Size = new System.Drawing.Size(75, 23);
-			this.applyButton.TabIndex = 2;
+			this.applyButton.TabIndex = 21;
 			this.applyButton.Text = "Apply";
 			this.applyButton.UseVisualStyleBackColor = true;
 			this.applyButton.Click += new System.EventHandler(this.apply_Click);
@@ -192,7 +195,7 @@
 			this.itemList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.itemList.ShowEditingIcon = false;
 			this.itemList.Size = new System.Drawing.Size(516, 330);
-			this.itemList.TabIndex = 3;
+			this.itemList.TabIndex = 555;
 			this.itemList.SelectionChanged += new System.EventHandler(this.itemList_SelectionChanged);
 			// 
 			// D
@@ -240,7 +243,7 @@
 			this.purgeMappingsButton.Location = new System.Drawing.Point(140, 339);
 			this.purgeMappingsButton.Name = "purgeMappingsButton";
 			this.purgeMappingsButton.Size = new System.Drawing.Size(23, 23);
-			this.purgeMappingsButton.TabIndex = 18;
+			this.purgeMappingsButton.TabIndex = 189;
 			this.purgeMappingsButton.Text = "X";
 			this.purgeMappingsButton.UseVisualStyleBackColor = true;
 			this.purgeMappingsButton.Click += new System.EventHandler(this.purgeMappingsButton_Click);
@@ -252,7 +255,7 @@
 			this.descriptionTextBox.Location = new System.Drawing.Point(71, 161);
 			this.descriptionTextBox.Name = "descriptionTextBox";
 			this.descriptionTextBox.Size = new System.Drawing.Size(202, 20);
-			this.descriptionTextBox.TabIndex = 17;
+			this.descriptionTextBox.TabIndex = 8;
 			this.descriptionTextBox.TextChanged += new System.EventHandler(this.descriptionTextBox_TextChanged);
 			// 
 			// label7
@@ -266,20 +269,6 @@
 			this.label7.TabIndex = 16;
 			this.label7.Text = "Description:";
 			// 
-			// imageButton
-			// 
-			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.imageButton.AutoScaleBorder = 0;
-			this.imageButton.AutoScaleImage = null;
-			this.imageButton.Location = new System.Drawing.Point(12, 216);
-			this.imageButton.Name = "imageButton";
-			this.imageButton.Size = new System.Drawing.Size(261, 118);
-			this.imageButton.TabIndex = 15;
-			this.imageButton.Text = "Image";
-			this.imageButton.UseVisualStyleBackColor = true;
-			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
-			// 
 			// dependsTextBox
 			// 
 			this.dependsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -287,7 +276,7 @@
 			this.dependsTextBox.Location = new System.Drawing.Point(71, 135);
 			this.dependsTextBox.Name = "dependsTextBox";
 			this.dependsTextBox.Size = new System.Drawing.Size(202, 20);
-			this.dependsTextBox.TabIndex = 14;
+			this.dependsTextBox.TabIndex = 7;
 			this.dependsTextBox.TextChanged += new System.EventHandler(this.dependsTextBox_TextChanged);
 			// 
 			// label6
@@ -309,7 +298,7 @@
 			this.buildArchiveButton.Location = new System.Drawing.Point(12, 187);
 			this.buildArchiveButton.Name = "buildArchiveButton";
 			this.buildArchiveButton.Size = new System.Drawing.Size(261, 23);
-			this.buildArchiveButton.TabIndex = 12;
+			this.buildArchiveButton.TabIndex = 9;
 			this.buildArchiveButton.Text = "Browse, Compress, and Upload";
 			this.buildArchiveButton.UseVisualStyleBackColor = true;
 			this.buildArchiveButton.Click += new System.EventHandler(this.buildArchiveButton_Click);
@@ -321,7 +310,7 @@
 			this.targetExeTextBox.Location = new System.Drawing.Point(71, 109);
 			this.targetExeTextBox.Name = "targetExeTextBox";
 			this.targetExeTextBox.Size = new System.Drawing.Size(202, 20);
-			this.targetExeTextBox.TabIndex = 11;
+			this.targetExeTextBox.TabIndex = 6;
 			this.targetExeTextBox.TextChanged += new System.EventHandler(this.targetExeTextBox_TextChanged);
 			// 
 			// label5
@@ -353,7 +342,7 @@
 			this.saveFolderTextBox.Location = new System.Drawing.Point(71, 83);
 			this.saveFolderTextBox.Name = "saveFolderTextBox";
 			this.saveFolderTextBox.Size = new System.Drawing.Size(202, 20);
-			this.saveFolderTextBox.TabIndex = 8;
+			this.saveFolderTextBox.TabIndex = 5;
 			this.saveFolderTextBox.TextChanged += new System.EventHandler(this.saveFolderTextBox_TextChanged);
 			// 
 			// label3
@@ -374,7 +363,7 @@
 			this.installFolderTextBox.Location = new System.Drawing.Point(71, 57);
 			this.installFolderTextBox.Name = "installFolderTextBox";
 			this.installFolderTextBox.Size = new System.Drawing.Size(202, 20);
-			this.installFolderTextBox.TabIndex = 6;
+			this.installFolderTextBox.TabIndex = 4;
 			this.installFolderTextBox.TextChanged += new System.EventHandler(this.installFolderTextBox_TextChanged);
 			// 
 			// saveMappings
@@ -383,7 +372,7 @@
 			this.saveMappings.Location = new System.Drawing.Point(12, 340);
 			this.saveMappings.Name = "saveMappings";
 			this.saveMappings.Size = new System.Drawing.Size(122, 22);
-			this.saveMappings.TabIndex = 5;
+			this.saveMappings.TabIndex = 11;
 			this.saveMappings.Text = "Save mappings.json";
 			this.saveMappings.UseVisualStyleBackColor = true;
 			this.saveMappings.Click += new System.EventHandler(this.saveMappings_Click);
@@ -393,7 +382,7 @@
 			this.addNewItemButton.Location = new System.Drawing.Point(4, 4);
 			this.addNewItemButton.Name = "addNewItemButton";
 			this.addNewItemButton.Size = new System.Drawing.Size(22, 22);
-			this.addNewItemButton.TabIndex = 4;
+			this.addNewItemButton.TabIndex = 1;
 			this.addNewItemButton.Text = "+";
 			this.addNewItemButton.UseVisualStyleBackColor = true;
 			this.addNewItemButton.Click += new System.EventHandler(this.addNewItemButton_Click);
@@ -416,7 +405,7 @@
 			this.archiveBox.Location = new System.Drawing.Point(71, 31);
 			this.archiveBox.Name = "archiveBox";
 			this.archiveBox.Size = new System.Drawing.Size(202, 20);
-			this.archiveBox.TabIndex = 2;
+			this.archiveBox.TabIndex = 3;
 			this.archiveBox.TextChanged += new System.EventHandler(this.archiveBox_TextChanged);
 			// 
 			// label1
@@ -437,7 +426,7 @@
 			this.nameBox.Location = new System.Drawing.Point(71, 5);
 			this.nameBox.Name = "nameBox";
 			this.nameBox.Size = new System.Drawing.Size(202, 20);
-			this.nameBox.TabIndex = 0;
+			this.nameBox.TabIndex = 2;
 			this.nameBox.TextChanged += new System.EventHandler(this.nameBox_TextChanged);
 			// 
 			// menuStrip1
@@ -454,6 +443,7 @@
 			// 
 			this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setSteamUsernameToolStripMenuItem,
+            this.setInstallDirectoryToolStripMenuItem,
             this.checkForUpdatesToolStripMenuItem});
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
 			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
@@ -482,12 +472,40 @@
 			this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
 			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
 			// 
+			// setInstallDirectoryToolStripMenuItem
+			// 
+			this.setInstallDirectoryToolStripMenuItem.Name = "setInstallDirectoryToolStripMenuItem";
+			this.setInstallDirectoryToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.setInstallDirectoryToolStripMenuItem.Text = "Set Install Directory";
+			this.setInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.setInstallDirectoryToolStripMenuItem_Click);
+			// 
+			// saveFileDialog1
+			// 
+			this.saveFileDialog1.AddExtension = false;
+			this.saveFileDialog1.OverwritePrompt = false;
+			this.saveFileDialog1.ValidateNames = false;
+			// 
+			// imageButton
+			// 
+			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.imageButton.AutoScaleBorder = 0;
+			this.imageButton.AutoScaleImage = null;
+			this.imageButton.Location = new System.Drawing.Point(12, 216);
+			this.imageButton.Name = "imageButton";
+			this.imageButton.Size = new System.Drawing.Size(261, 118);
+			this.imageButton.TabIndex = 10;
+			this.imageButton.Text = "Image";
+			this.imageButton.UseVisualStyleBackColor = true;
+			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(815, 553);
 			this.Controls.Add(this.splitContainer1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
 			this.Text = "PakMan";
 			this.Load += new System.EventHandler(this.MainForm_Load);
@@ -548,6 +566,8 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn gameSize;
 		private System.Windows.Forms.Button purgeMappingsButton;
 		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem setInstallDirectoryToolStripMenuItem;
+		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

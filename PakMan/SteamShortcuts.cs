@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -133,7 +134,7 @@ namespace PakMan {
 		public VDFGame(Game game) {
 			name = game.name;
 			startdir = Path.GetFullPath(game.installfolder);
-			exe = Path.Combine(Path.GetFullPath(game.installfolder), game.targetexe);
+			exe = Path.Combine(MainForm.context.settings.getGamesFolder(game.installfolder), game.targetexe);
 		}
 		public override string ToString() {
 			return name + " - " + exe + " - " + startdir;

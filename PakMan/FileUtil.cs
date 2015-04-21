@@ -15,6 +15,7 @@ namespace PakMan
 {
 	static class FileUtil
 	{
+
 		public static string getCacheFolder() {return Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "archive_cache");}
 		public static string getCacheFolder(string p) {
 			return Path.Combine(getCacheFolder(), p);
@@ -178,6 +179,10 @@ namespace PakMan
 
 	public class UserSettings {
 		public string steamFolder;
+		public string gamesFolder = "";
+		public string getGamesFolder(string fileName) {
+			return Path.Combine(gamesFolder, fileName);
+		}
 		public Int32 steamID = 0;
 
 		public IDictionary<string, List<string>> installedFilenames = new Dictionary<string, List<string>>();

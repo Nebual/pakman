@@ -32,6 +32,7 @@ namespace PakMan {
 			this.Text = this.ProductName + " v" + v;
 		}
 
+		public static MainForm context;
 		Games mappings;
 		public UserSettings settings;
 		public Button saveMappingsPublic;
@@ -40,6 +41,7 @@ namespace PakMan {
 		private void MainForm_Load(object sender, EventArgs e) {
 			saveMappingsPublic = saveMappings;
 
+			MainForm.context = this;
 			FileUtil.context = this;
 			Game.context = this;
 			settings = UserSettings.open();
@@ -65,17 +67,17 @@ namespace PakMan {
 				}
 			}
 
-			loadMapping();
+			loadGames();
 		}
 
-		private void loadMapping() {
+		private void loadGames() {
 			itemList.Rows.Clear();
 			gameLookup.Clear();
 			mappings = Games.open();
 			foreach (Game game in mappings.games) {
 				gameLookup[game.name] = game;
 				bool downloaded = (game.archive_filename.Length > 0 && FileUtil.archiveExists(game.archive_filename));
-				bool installed = Directory.Exists(game.installfolder);
+				bool installed = game.exists();
 				string archiveSize = downloaded ? FileUtil.SizeSuffix(game.archive_size) : "";
 				string gameSize = downloaded ? FileUtil.SizeSuffix(game.extracted_size) : "";
 				itemList.Rows.Add(new object[] { downloaded, installed, game.name, game.description, archiveSize, gameSize });
@@ -83,7 +85,7 @@ namespace PakMan {
 			dirty = false;
 		}
 		private void revertButton_Click(object sender, EventArgs e) {
-			loadMapping();
+			loadGames();
 		}
 
 		private void apply_Click(object sender, EventArgs e) {
@@ -145,6 +147,7 @@ namespace PakMan {
 			catch (NullReferenceException) { }
 			catch (IndexOutOfRangeException) { }
 			catch (ArgumentOutOfRangeException) { }
+			catch (KeyNotFoundException) { }
 			return activeGame;
 		}
 
@@ -176,7 +179,7 @@ namespace PakMan {
 		}
 
 		private void saveMappings_Click(object sender, EventArgs e) {
-			File.WriteAllText("mappings.json", JsonConvert.SerializeObject(mappings, Formatting.Indented));
+			mappings.save();
 			dirty = false;
 		}
 		private bool _dirty;
@@ -259,8 +262,12 @@ namespace PakMan {
 			if (game.archive_filename.Length == 0) {
 				game.archive_filename = game.name + ".7z";
 			}
-			if(folderBrowserDialog1.ShowDialog() == DialogResult.OK) {
-				FileUtil.createArchive(game.archive_filename, folderBrowserDialog1.SelectedPath);
+			//saveFileDialog1.ShowDialog( .Description = "Select the game's folder, to be 7z'd and uploaded";
+			saveFileDialog1.FileName = "";
+			saveFileDialog1.Title = "Select Folder to Archive";
+			saveFileDialog1.Filter = "Folders|folders";
+			if (saveFileDialog1.ShowDialog() == DialogResult.OK) {
+				FileUtil.createArchive(game.archive_filename, Path.GetDirectoryName(saveFileDialog1.FileName));
 				if (FileUtil.archiveExists(game.archive_filename)) {
 					game.detection_filename = FileUtil.archiveGetFilenames(game.archive_filename)[0];
 					game.archive_size = 0; itemList.SelectedRows[0].Cells[4].Value = FileUtil.SizeSuffix(game.archive_size); // recalc archive size
@@ -280,6 +287,15 @@ namespace PakMan {
 			}
 		}
 
+		private void setInstallDirectoryToolStripMenuItem_Click(object sender, EventArgs e) {
+			saveFileDialog1.FileName = "";
+			saveFileDialog1.Title = "Specify where you'd like games installed to.";
+			saveFileDialog1.Filter = "Folders|folders";
+			if (saveFileDialog1.ShowDialog() == DialogResult.OK) {
+				settings.gamesFolder = Path.GetDirectoryName(saveFileDialog1.FileName);
+			}
+		}
+
 		private void imageButton_Click(object sender, EventArgs e) {
 			if(openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
 				Game game = selectedGame();
@@ -295,9 +311,9 @@ namespace PakMan {
 		}
 
 		private void purgeMappingsButton_Click(object sender, EventArgs e) {
-			if (MessageBox.Show("Overwrite local mappings.json database with a freshly downloaded copy?", "Purge mappings.json", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) {
-				File.Delete("mappings.json");
-				loadMapping();
+			if (MessageBox.Show("Overwrite local games.json database with a freshly downloaded copy?", "Purge games.json", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) {
+				File.Delete(Games.GamesMappingFile);
+				loadGames();
 			}
 		}
 

@@ -14,9 +14,15 @@ namespace PakMan {
 	public class Games {
 		public IList<Game> games { get; set; }
 
+		[JsonIgnore]
+		public static string GamesMappingFile = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "games.json");
+
 		public static Games open() {
-			if (!File.Exists("mappings.json")) FileUtil.download("mappings.json", "mappings.json");
-			return JsonConvert.DeserializeObject<Games>(File.ReadAllText("mappings.json"));
+			if (!File.Exists(GamesMappingFile)) FileUtil.download("games.json", GamesMappingFile);
+			return JsonConvert.DeserializeObject<Games>(File.ReadAllText(GamesMappingFile));
+		}
+		public void save() {
+			File.WriteAllText(GamesMappingFile, JsonConvert.SerializeObject(this, Formatting.Indented));
 		}
 	}
 
@@ -114,7 +120,7 @@ namespace PakMan {
 
 		public bool exists() {
 			if (detection_filename.Length == 0) return false;
-			return File.Exists(Path.Combine(installfolder, detection_filename));
+			return File.Exists(Path.Combine(context.settings.getGamesFolder(installfolder), detection_filename));
 		}
 
 
@@ -132,11 +138,11 @@ namespace PakMan {
 				context.log("Error Cannot Extract: Archive '" + archive_filename + "'doesn't exist!");
 				return false;
 			}
-			Directory.CreateDirectory(installfolder);
+			Directory.CreateDirectory(context.settings.getGamesFolder(installfolder));
 			string archivePath = FileUtil.getCacheFolder(archive_filename);
-			context.log("Extracting " + archive_filename + " to " + installfolder, "...");
+			context.log("Extracting " + archive_filename + " to " + context.settings.getGamesFolder(installfolder), "...");
 			using (SevenZipExtractor extractor = new SevenZipExtractor(archivePath)) {
-				extractor.ExtractArchive(installfolder);
+				extractor.ExtractArchive(context.settings.getGamesFolder(installfolder));
 				context.settings.installedFilenames[name] = new List<string>(extractor.ArchiveFileNames);
 				context.log(" done.");
 				extracted_size = extractor.UnpackedSize;
@@ -164,7 +170,7 @@ namespace PakMan {
 				}
 
 				foreach (string filename in filenames) {
-					string path = Path.Combine(installfolder, filename);
+					string path = Path.Combine(context.settings.getGamesFolder(installfolder), filename);
 					if (Directory.Exists(path)) {
 						if (Directory.GetFiles(path).Length == 0) {
 							Directory.Delete(path, false);
@@ -174,8 +180,8 @@ namespace PakMan {
 						File.Delete(path);
 					}
 				}
-				if (Directory.GetFiles(installfolder).Length == 0) {
-					Directory.Delete(installfolder, false);
+				if (Directory.GetFiles(context.settings.getGamesFolder(installfolder)).Length == 0) {
+					Directory.Delete(context.settings.getGamesFolder(installfolder), false);
 				}
 				context.log(" done.");
 			}
