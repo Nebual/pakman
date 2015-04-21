@@ -59,6 +59,11 @@ namespace PakMan
 		public static bool archiveExists(string archiveName) {
 			return File.Exists(getCacheFolder(archiveName));
 		}
+		public static void download(string filename, string savepath) {
+			using (WebClient Client = new WebClient()) {
+				Client.DownloadFile("http://nebtown.info/pakman/" + filename, savepath);
+			}
+		}
 		public void downloadArchive(string archiveName, bool overwrite = false) {
 			if (archiveName.Length == 0) {
 				log("Error Cannot Download: Invalid archiveName");
@@ -66,9 +71,7 @@ namespace PakMan
 			}
 			if (overwrite || !archiveExists(archiveName)) {
 				log("Downloading " + archiveName, "...");
-				using (WebClient Client = new WebClient()) {
-					Client.DownloadFile("http://nebtown.info/pakman/" + archiveName, Path.Combine(cacheFolder, archiveName));
-				}
+				download(archiveName, Path.Combine(cacheFolder, archiveName));
 				log(" done.");
 			}
 		}
@@ -202,6 +205,11 @@ namespace PakMan
 
 	public class Mapping {
 		public IList<GameMapping> games { get; set; }
+
+		public static Mapping open() {
+			if(!File.Exists("mappings.json")) FileUtil.download("mappings.json", "mappings.json");
+			return JsonConvert.DeserializeObject<Mapping>(File.ReadAllText("mappings.json"));
+		}
 	}
 
 	public class GameMapping {

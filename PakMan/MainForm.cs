@@ -68,7 +68,7 @@ namespace PakMan {
 		private void loadMapping() {
 			itemList.Rows.Clear();
 			gameLookup.Clear();
-			mappings = JsonConvert.DeserializeObject<Mapping>(File.ReadAllText("mappings.json"));
+			mappings = Mapping.open();
 			foreach (GameMapping game in mappings.games) {
 				gameLookup[game.name] = game;
 				bool downloaded = (game.archive_filename.Length > 0 && FileUtil.archiveExists(game.archive_filename));
