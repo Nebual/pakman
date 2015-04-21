@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.ObjectModel;
 
 namespace PakMan
 {
@@ -55,8 +56,8 @@ namespace PakMan
 			File.WriteAllText(Path.Combine(Application.UserAppDataPath, "archive_cache", filename), data);
 		}
 
-		public bool archiveExists(string archiveName) {
-			return File.Exists(Path.Combine(cacheFolder, archiveName));
+		public static bool archiveExists(string archiveName) {
+			return File.Exists(getCacheFolder(archiveName));
 		}
 		public void downloadArchive(string archiveName, bool overwrite = false) {
 			if (archiveName.Length == 0) {
@@ -79,40 +80,6 @@ namespace PakMan
 			if (archiveExists(archiveName)) {
 				log("Deleting archive " + archiveName, "...");
 				File.Delete(Path.Combine(cacheFolder, archiveName));
-				log(" done.");
-			}
-		}
-
-		public long extractArchive(string archiveName, string destinationPath) {
-			if (archiveName.Length == 0) {
-				log("Error Cannot Extract: Invalid archiveName");
-				return 0;
-			}
-			if (destinationPath.Length == 0) {
-				log("Error Cannot Extract: Invalid destinationPath");
-				return 0;
-			}
-			if (Directory.Exists(destinationPath)) {
-				return 0;
-			}
-			if (!archiveExists(archiveName)) {
-				log("Error Cannot Extract: Archive '"+archiveName+"'doesn't exist!");
-				return 0;
-			}
-			Directory.CreateDirectory(destinationPath);
-			string archivePath = Path.Combine(cacheFolder, archiveName);
-			log("Extracting " + archiveName + " to " + destinationPath, "...");
-			using (SevenZipExtractor extractor = new SevenZipExtractor(archivePath)) {
-				extractor.ExtractArchive(destinationPath);
-				log(" done.");
-				return extractor.UnpackedSize;
-			}
-		}
-		public void deleteGame(string destinationPath) {
-			if (destinationPath.Length == 0) return;
-			if (Directory.Exists(destinationPath)) {
-				log("Uninstalling " + destinationPath, "");
-				Directory.Delete(destinationPath, true);
 				log(" done.");
 			}
 		}
@@ -144,6 +111,12 @@ namespace PakMan
 			compressor.IncludeEmptyDirectories = true;
 			compressor.CompressDirectory(folderPath, Path.Combine(cacheFolder, archiveName), true);
 			log(" done.");
+		}
+
+		public static List<string> archiveGetFilenames(string archiveName) {
+			using (SevenZipExtractor extractor = new SevenZipExtractor(getCacheFolder(archiveName))) {
+				return new List<string>(extractor.ArchiveFileNames);
+			}
 		}
 
 		public void uploadArchive(string filename) {
@@ -232,9 +205,14 @@ namespace PakMan
 	}
 
 	public class GameMapping {
+		[JsonIgnore]
+		public static MainForm context;
+
+
 		public GameMapping() {
 			this.name = "?";
-			this.filename = "";
+			this.archive_filename = "";
+			this.detection_filename = "";
 			this.savefolder = "";
 			this.installfolder = "";
 			this.archive_size = 0;
@@ -250,12 +228,16 @@ namespace PakMan
 		public string name { get; set; }
 		public string dependencies { get; set; }
 		public string description { get; set; }
-		public string detection_filename { get; set; }
+		private string _detection_filename;
+		public string detection_filename {
+			get { return _detection_filename; }
+			set { _detection_filename = value.Replace("/", "\\"); }
+		}
 
-		private string _filename;
-		public string filename {
-			get { return _filename; }
-			set { _filename = value.Replace("/", "\\"); }
+		private string _archive_filename;
+		public string archive_filename {
+			get { return _archive_filename; }
+			set { _archive_filename = value.Replace("/", "\\"); }
 		}
 		private string _savefolder;
 		public string savefolder {
@@ -274,7 +256,7 @@ namespace PakMan
 		public long archive_size {
 			get {
 				if (_archive_size != 0) return _archive_size;
-				return _archive_size = FileUtil.archiveSize(filename);
+				return _archive_size = FileUtil.archiveSize(archive_filename);
 			}
 			set { _archive_size = value; }
 		}
@@ -312,6 +294,74 @@ namespace PakMan
 			}
 			return null;
 		}
+
+		public bool exists() {
+			if (detection_filename.Length == 0) return false;
+			return File.Exists(Path.Combine(installfolder, detection_filename));
+		}
+
+
+
+		public bool install() {
+			if (archive_filename.Length == 0) {
+				context.log("Error Cannot Extract: Invalid archive_filename");
+				return false;
+			}
+			if (installfolder.Length == 0) {
+				context.log("Error Cannot Extract: Invalid installfolder");
+				return false;
+			}
+			if (!FileUtil.archiveExists(archive_filename)) {
+				context.log("Error Cannot Extract: Archive '" + archive_filename + "'doesn't exist!");
+				return false;
+			}
+			Directory.CreateDirectory(installfolder);
+			string archivePath = FileUtil.getCacheFolder(archive_filename);
+			context.log("Extracting " + archive_filename + " to " + installfolder, "...");
+			using (SevenZipExtractor extractor = new SevenZipExtractor(archivePath)) {
+				extractor.ExtractArchive(installfolder);
+				context.settings.installedFilenames[name] = new List<string>(extractor.ArchiveFileNames);
+				context.log(" done.");
+				extracted_size = extractor.UnpackedSize;
+			}
+			return true;
+		}
+
+		internal void uninstall() {
+			if (installfolder.Length == 0) return;
+			if(exists()) {
+				context.log("Uninstalling " + name, "");
+
+				List<string> filenames = null; 
+				if(context.settings.installedFilenames.ContainsKey(name)) {
+					filenames = context.settings.installedFilenames[name];
+				}
+				if ((filenames == null) || filenames.Count() == 0) {
+					if(FileUtil.archiveExists(archive_filename)) {
+						filenames = FileUtil.archiveGetFilenames(archive_filename);
+					} else {
+						context.log("Error: Cannot uninstall; archive not present and install log corrupt.");
+						return;
+					}
+				}
+
+				foreach (string filename in filenames) {
+					string path = Path.Combine(installfolder, filename);
+					if (Directory.Exists(path)) {
+						if (Directory.GetFiles(path).Length == 0) {
+							Directory.Delete(path, false);
+						}
+					}
+					else if (File.Exists(path)) {
+						File.Delete(path);
+					}
+				}
+				if (Directory.GetFiles(installfolder).Length == 0) {
+					Directory.Delete(installfolder, false);
+				}
+				context.log(" done.");
+			}
+		}
 	}
 
 	public class State {
@@ -329,6 +379,8 @@ namespace PakMan
 		public string steamFolder;
 		public Int32 steamID = 0;
 
+		public IDictionary<string, List<string>> installedFilenames = new Dictionary<string, List<string>>();
+
 		public static string UserSettingsFile = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "pakman", "user.json");
 
 		public static UserSettings open() {
@@ -343,13 +395,15 @@ namespace PakMan
 			File.WriteAllText(UserSettings.UserSettingsFile, JsonConvert.SerializeObject(this, Formatting.Indented));
 		}
 
+		[JsonIgnore]
 		public string steamUserdataPath {
 			get { return Path.Combine(steamFolder, "userdata", steamID.ToString()); }
 		}
-
+		[JsonIgnore]
 		public string steamShortcutsPath {
 			get { return Path.Combine(steamUserdataPath, "config", "shortcuts.vdf"); }
 		}
+		[JsonIgnore]
 		public string steamGridPath {
 			get { return Path.Combine(steamUserdataPath, "config", "grid"); }
 		}

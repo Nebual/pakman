@@ -9,16 +9,15 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 /*
  * 
  * == Todo ==
- * Implement picture uploads
- * Tie in pictures to Steam Bigpicture
  * Dependencies (do the multiple, hierarchial approach with recursion when ticking boxes)
- * Implement better "its installed" detection; only remove files found in the relevent archive (install log in user.json??)
+ * Game Saves (have a wildcard?)
  */
 
 namespace PakMan {
@@ -26,7 +25,9 @@ namespace PakMan {
 	public partial class MainForm : Form {
 
 		public MainForm() {
+			addDLLReflection();
 			InitializeComponent();
+			this.Text = this.ProductName + " v" + this.ProductVersion.TrimEnd(new char[]{'0','.'});
 		}
 
 		FileUtil F;
@@ -40,6 +41,7 @@ namespace PakMan {
 
 			settings = UserSettings.open();
 			F = new FileUtil(this);
+			GameMapping.context = this;
 
 			RegistryKey regKey;
 			if ((regKey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam")) != null) {
@@ -69,11 +71,11 @@ namespace PakMan {
 			mappings = JsonConvert.DeserializeObject<Mapping>(File.ReadAllText("mappings.json"));
 			foreach (GameMapping game in mappings.games) {
 				gameLookup[game.name] = game;
-				bool downloaded = (game.filename.Length > 0 && F.archiveExists(game.filename));
+				bool downloaded = (game.archive_filename.Length > 0 && FileUtil.archiveExists(game.archive_filename));
 				bool installed = Directory.Exists(game.installfolder);
 				string archiveSize = downloaded ? FileUtil.SizeSuffix(game.archive_size) : "";
 				string gameSize = downloaded ? FileUtil.SizeSuffix(game.extracted_size) : "";
-				itemList.Rows.Add(new object[] { downloaded, installed, game.name, archiveSize, gameSize });
+				itemList.Rows.Add(new object[] { downloaded, installed, game.name, game.description, archiveSize, gameSize });
 			}
 			F.dirty = false;
 		}
@@ -93,31 +95,32 @@ namespace PakMan {
 				logContext = game.name;
 
 				if ((bool)row.Cells[0].Value) {
-					F.downloadArchive(game.filename);
+					F.downloadArchive(game.archive_filename);
 				}
 
 				if ((bool)row.Cells[1].Value) {
-					if (!Directory.Exists(game.installfolder)) F.downloadArchive(game.filename);
+					F.downloadArchive(game.archive_filename);
 
-					long size;
-					if ((size = F.extractArchive(game.filename, game.installfolder)) > 0) {
-						game.extracted_size = size;
-						row.Cells[4].Value = FileUtil.SizeSuffix(game.extracted_size);
-						steamShortcuts.addGame(game);
+					if (!game.exists()) {
+						if (game.install()) {
+							row.Cells[5].Value = FileUtil.SizeSuffix(game.extracted_size);
+							steamShortcuts.addGame(game);
+						}
 					}
 				}
 				else {
-					F.deleteGame(game.installfolder);
+					game.uninstall();
 					steamShortcuts.removeGame(game);
 				}
 
 				if (!(bool)row.Cells[0].Value) {
-					F.deleteArchive(game.filename);
+					F.deleteArchive(game.archive_filename);
 				}
 			}
 			logContext = "";
 
 			if (steamShortcuts.flush()) log("Updated Steam's shortcuts.vdf file. Please restart Steam.");
+			settings.save();
 			log("** Processing Complete **");
 		}
 
@@ -148,7 +151,7 @@ namespace PakMan {
 
 		private void updateDescription(GameMapping game) {
 			nameBox.Text = game.name;
-			archiveBox.Text = game.filename;
+			archiveBox.Text = game.archive_filename;
 			saveFolderTextBox.Text = game.savefolder;
 			installFolderTextBox.Text = game.installfolder;
 			targetExeTextBox.Text = game.targetexe;
@@ -187,8 +190,8 @@ namespace PakMan {
 
 		private void archiveBox_TextChanged(object sender, EventArgs e) {
 			GameMapping game = selectedGame();
-			if (game.filename != archiveBox.Text) {
-				game.filename = archiveBox.Text;
+			if (game.archive_filename != archiveBox.Text) {
+				game.archive_filename = archiveBox.Text;
 				F.dirty = true;
 			}
 		}
@@ -229,22 +232,27 @@ namespace PakMan {
 			GameMapping game = selectedGame();
 			if (game.description != descriptionTextBox.Text) {
 				game.description = descriptionTextBox.Text;
+				itemList.SelectedRows[0].Cells[3].Value = descriptionTextBox.Text;
 				F.dirty = true;
 			}
 		}
 
 		private void buildArchiveButton_Click(object sender, EventArgs e) {
 			GameMapping game = selectedGame();
-			if (game.name == "New" || game.filename.Length == 0) {
-				log("Error: Fill out game name and archive name.");
+			if (game.name == "New") {
+				log("Error: Fill out game name!");
 				return;
 			}
+			if (game.archive_filename.Length == 0) {
+				game.archive_filename = game.name + ".7z";
+			}
 			if(folderBrowserDialog1.ShowDialog() == DialogResult.OK) {
-				F.createArchive(game.filename, folderBrowserDialog1.SelectedPath);
-				if (F.archiveExists(game.filename)) {
-					game.archive_size = 0; itemList.SelectedRows[0].Cells[3].Value = FileUtil.SizeSuffix(game.archive_size); // recalc archive size
+				F.createArchive(game.archive_filename, folderBrowserDialog1.SelectedPath);
+				if (FileUtil.archiveExists(game.archive_filename)) {
+					game.detection_filename = FileUtil.archiveGetFilenames(game.archive_filename)[0];
+					game.archive_size = 0; itemList.SelectedRows[0].Cells[4].Value = FileUtil.SizeSuffix(game.archive_size); // recalc archive size
 					itemList.SelectedRows[0].Cells[0].Value = true;
-					F.uploadArchive(game.filename);
+					F.uploadArchive(game.archive_filename);
 				}
 			}
 		}
@@ -271,6 +279,21 @@ namespace PakMan {
 				if (settings.steamID != 0) { new VDFGame(game).copyImageToGrid(settings.steamGridPath); }
 				F.uploadArchive(game.name + ".png");
 			}
+		}
+
+
+
+		private void addDLLReflection() {
+			AppDomain.CurrentDomain.AssemblyResolve += (sender, args) => {
+				string resourceName = new AssemblyName(args.Name).Name + ".dll";
+				string resource = Array.Find(this.GetType().Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
+
+				using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource)) {
+					Byte[] assemblyData = new Byte[stream.Length];
+					stream.Read(assemblyData, 0, assemblyData.Length);
+					return Assembly.Load(assemblyData);
+				}
+			};
 		}
 	}
 }

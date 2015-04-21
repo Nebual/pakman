@@ -2,39 +2,39 @@
   "games": [
     {
       "name": "Diablo 1",
-      "filename": "diablo1.7z",
+      "dependencies": "DIABDAT.mpq",
+      "description": "Good game",
+      "detection_filename": "Diablo.exe",
+      "archive_filename": "diablo1.7z",
       "savefolder": "",
-      "installfolder": "H:\\test\\diablo1\\",
-      "archive_size": 3228,
-      "extracted_size": 11653,
-      "targetexe": ""
+      "installfolder": "Diablo\\",
+      "archive_size": 1273381,
+      "extracted_size": 2579853,
+      "targetexe": "Diablo.exe"
     },
     {
-      "name": "Diablo 2",
-      "filename": "diablo2.7z",
+      "name": "DIABDAT.mpq",
+      "dependencies": "",
+      "description": "Base D1 shit",
+      "detection_filename": "DIABDAT.mpq",
+      "archive_filename": "DIABDAT.7z",
       "savefolder": "",
-      "installfolder": "H:\\test\\Diablo2\\",
-      "archive_size": 0,
-      "extracted_size": 140764,
-      "targetexe": ""
-    },
-    {
-      "name": "Warcraft 2!!",
-      "filename": "warcraft2.7z",
-      "savefolder": "",
-      "installfolder": "Warcraft 2!!\\",
-      "archive_size": 0,
-      "extracted_size": 0,
+      "installfolder": "Diablo\\",
+      "archive_size": 517501400,
+      "extracted_size": 517501282,
       "targetexe": ""
     },
     {
       "name": "Diablo 1 Tchernobog",
-      "filename": "d1_tchernobog.7z",
+      "dependencies": "",
+      "description": "",
+      "detection_filename": "Tchernobog.exe",
+      "archive_filename": "d1_tchernobog.7z",
       "savefolder": "",
       "installfolder": "Diablo\\",
       "archive_size": 7035886,
       "extracted_size": 12105073,
       "targetexe": "Tchernobog.exe"
-    },
+    }
   ]
 }
