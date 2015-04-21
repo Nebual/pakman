@@ -281,6 +281,13 @@ namespace PakMan {
 			}
 		}
 
+		private void purgeMappingsButton_Click(object sender, EventArgs e) {
+			if (MessageBox.Show("Overwrite local mappings.json database with a freshly downloaded copy?", "Purge mappings.json", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) {
+				File.Delete("mappings.json");
+				loadMapping();
+			}
+		}
+
 
 
 		private void addDLLReflection() {

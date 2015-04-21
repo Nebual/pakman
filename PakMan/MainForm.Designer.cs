@@ -34,6 +34,15 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.itemList = new System.Windows.Forms.DataGridView();
+			this.D = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.I = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.gameName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.archiveSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.gameSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.descriptionTextBox = new System.Windows.Forms.TextBox();
+			this.label7 = new System.Windows.Forms.Label();
+			this.imageButton = new PakMan.AutoScaleButton();
 			this.dependsTextBox = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.buildArchiveButton = new System.Windows.Forms.Button();
@@ -54,15 +63,7 @@
 			this.setSteamUsernameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-			this.descriptionTextBox = new System.Windows.Forms.TextBox();
-			this.label7 = new System.Windows.Forms.Label();
-			this.imageButton = new PakMan.AutoScaleButton();
-			this.D = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.I = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.gameName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.archiveSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.gameSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.purgeMappingsButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -144,6 +145,7 @@
 			// 
 			// splitContainer2.Panel2
 			// 
+			this.splitContainer2.Panel2.Controls.Add(this.purgeMappingsButton);
 			this.splitContainer2.Panel2.Controls.Add(this.descriptionTextBox);
 			this.splitContainer2.Panel2.Controls.Add(this.label7);
 			this.splitContainer2.Panel2.Controls.Add(this.imageButton);
@@ -191,6 +193,81 @@
 			this.itemList.Size = new System.Drawing.Size(516, 330);
 			this.itemList.TabIndex = 3;
 			this.itemList.SelectionChanged += new System.EventHandler(this.itemList_SelectionChanged);
+			// 
+			// D
+			// 
+			this.D.HeaderText = "D";
+			this.D.Name = "D";
+			this.D.Width = 20;
+			// 
+			// I
+			// 
+			this.I.HeaderText = "I";
+			this.I.Name = "I";
+			this.I.Width = 20;
+			// 
+			// gameName
+			// 
+			this.gameName.HeaderText = "Name";
+			this.gameName.Name = "gameName";
+			this.gameName.ReadOnly = true;
+			this.gameName.Width = 150;
+			// 
+			// Description
+			// 
+			this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			this.Description.HeaderText = "Description";
+			this.Description.Name = "Description";
+			this.Description.ReadOnly = true;
+			// 
+			// archiveSize
+			// 
+			this.archiveSize.HeaderText = "7z Size";
+			this.archiveSize.Name = "archiveSize";
+			this.archiveSize.ReadOnly = true;
+			this.archiveSize.Width = 70;
+			// 
+			// gameSize
+			// 
+			this.gameSize.HeaderText = "G Size";
+			this.gameSize.Name = "gameSize";
+			this.gameSize.ReadOnly = true;
+			this.gameSize.Width = 70;
+			// 
+			// descriptionTextBox
+			// 
+			this.descriptionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.descriptionTextBox.Location = new System.Drawing.Point(71, 161);
+			this.descriptionTextBox.Name = "descriptionTextBox";
+			this.descriptionTextBox.Size = new System.Drawing.Size(202, 20);
+			this.descriptionTextBox.TabIndex = 17;
+			this.descriptionTextBox.TextChanged += new System.EventHandler(this.descriptionTextBox_TextChanged);
+			// 
+			// label7
+			// 
+			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label7.AutoSize = true;
+			this.label7.Location = new System.Drawing.Point(8, 164);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(63, 13);
+			this.label7.TabIndex = 16;
+			this.label7.Text = "Description:";
+			// 
+			// imageButton
+			// 
+			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.imageButton.AutoScaleBorder = 0;
+			this.imageButton.AutoScaleImage = null;
+			this.imageButton.Location = new System.Drawing.Point(12, 216);
+			this.imageButton.Name = "imageButton";
+			this.imageButton.Size = new System.Drawing.Size(261, 118);
+			this.imageButton.TabIndex = 15;
+			this.imageButton.Text = "Image";
+			this.imageButton.UseVisualStyleBackColor = true;
+			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
 			// 
 			// dependsTextBox
 			// 
@@ -386,80 +463,15 @@
 			// 
 			this.openFileDialog1.FileName = "openFileDialog1";
 			// 
-			// descriptionTextBox
+			// purgeMappingsButton
 			// 
-			this.descriptionTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.descriptionTextBox.Location = new System.Drawing.Point(71, 161);
-			this.descriptionTextBox.Name = "descriptionTextBox";
-			this.descriptionTextBox.Size = new System.Drawing.Size(202, 20);
-			this.descriptionTextBox.TabIndex = 17;
-			this.descriptionTextBox.TextChanged += new System.EventHandler(this.descriptionTextBox_TextChanged);
-			// 
-			// label7
-			// 
-			this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(8, 164);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(63, 13);
-			this.label7.TabIndex = 16;
-			this.label7.Text = "Description:";
-			// 
-			// imageButton
-			// 
-			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.imageButton.AutoScaleBorder = 0;
-			this.imageButton.AutoScaleImage = null;
-			this.imageButton.Location = new System.Drawing.Point(12, 216);
-			this.imageButton.Name = "imageButton";
-			this.imageButton.Size = new System.Drawing.Size(261, 118);
-			this.imageButton.TabIndex = 15;
-			this.imageButton.Text = "Image";
-			this.imageButton.UseVisualStyleBackColor = true;
-			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
-			// 
-			// D
-			// 
-			this.D.HeaderText = "D";
-			this.D.Name = "D";
-			this.D.Width = 20;
-			// 
-			// I
-			// 
-			this.I.HeaderText = "I";
-			this.I.Name = "I";
-			this.I.Width = 20;
-			// 
-			// gameName
-			// 
-			this.gameName.HeaderText = "Name";
-			this.gameName.Name = "gameName";
-			this.gameName.ReadOnly = true;
-			this.gameName.Width = 150;
-			// 
-			// Description
-			// 
-			this.Description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			this.Description.HeaderText = "Description";
-			this.Description.Name = "Description";
-			this.Description.ReadOnly = true;
-			// 
-			// archiveSize
-			// 
-			this.archiveSize.HeaderText = "7z Size";
-			this.archiveSize.Name = "archiveSize";
-			this.archiveSize.ReadOnly = true;
-			this.archiveSize.Width = 70;
-			// 
-			// gameSize
-			// 
-			this.gameSize.HeaderText = "G Size";
-			this.gameSize.Name = "gameSize";
-			this.gameSize.ReadOnly = true;
-			this.gameSize.Width = 70;
+			this.purgeMappingsButton.Location = new System.Drawing.Point(140, 339);
+			this.purgeMappingsButton.Name = "purgeMappingsButton";
+			this.purgeMappingsButton.Size = new System.Drawing.Size(23, 23);
+			this.purgeMappingsButton.TabIndex = 18;
+			this.purgeMappingsButton.Text = "X";
+			this.purgeMappingsButton.UseVisualStyleBackColor = true;
+			this.purgeMappingsButton.Click += new System.EventHandler(this.purgeMappingsButton_Click);
 			// 
 			// MainForm
 			// 
@@ -525,6 +537,7 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn Description;
 		private System.Windows.Forms.DataGridViewTextBoxColumn archiveSize;
 		private System.Windows.Forms.DataGridViewTextBoxColumn gameSize;
+		private System.Windows.Forms.Button purgeMappingsButton;
     }
 }
 
