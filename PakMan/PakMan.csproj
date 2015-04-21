@@ -118,6 +118,7 @@
       <DependentUpon>Credentials.resx</DependentUpon>
     </Compile>
     <Compile Include="FileUtil.cs" />
+    <Compile Include="Games.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
