@@ -196,6 +196,7 @@ namespace PakMan {
 		private void nameBox_TextChanged(object sender, EventArgs e) {
 			Game game = selectedGame();
 			if (game.name != nameBox.Text) {
+				if (game.name.Contains("Super Metroid")) { MessageBox.Show("Who What", "Huh?", MessageBoxButtons.RetryCancel); }
 				gameLookup.Remove(game.name);
 				gameLookup[nameBox.Text] = game;
 				game.name = nameBox.Text;
@@ -319,6 +320,16 @@ namespace PakMan {
 
 		private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e) {
 			checkForApplicationUpdates();
+		}
+
+		private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+			if (!dirty || MessageBox.Show("You haven't saved games.json yet. Close anyway?", "Close Application", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+				
+			}
+			else {
+				e.Cancel = true;
+				this.Activate();
+			}   
 		}
 	}
 }

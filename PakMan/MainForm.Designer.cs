@@ -44,6 +44,7 @@
 			this.purgeMappingsButton = new System.Windows.Forms.Button();
 			this.descriptionTextBox = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
+			this.imageButton = new PakMan.AutoScaleButton();
 			this.dependsTextBox = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.buildArchiveButton = new System.Windows.Forms.Button();
@@ -62,12 +63,11 @@
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.setSteamUsernameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.setInstallDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			this.imageButton = new PakMan.AutoScaleButton();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -269,6 +269,20 @@
 			this.label7.TabIndex = 16;
 			this.label7.Text = "Description:";
 			// 
+			// imageButton
+			// 
+			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.imageButton.AutoScaleBorder = 0;
+			this.imageButton.AutoScaleImage = null;
+			this.imageButton.Location = new System.Drawing.Point(12, 216);
+			this.imageButton.Name = "imageButton";
+			this.imageButton.Size = new System.Drawing.Size(261, 118);
+			this.imageButton.TabIndex = 10;
+			this.imageButton.Text = "Image";
+			this.imageButton.UseVisualStyleBackColor = true;
+			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
+			// 
 			// dependsTextBox
 			// 
 			this.dependsTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -456,6 +470,20 @@
 			this.setSteamUsernameToolStripMenuItem.Text = "Set Steam Username";
 			this.setSteamUsernameToolStripMenuItem.Click += new System.EventHandler(this.setSteamUsernameToolStripMenuItem_Click);
 			// 
+			// setInstallDirectoryToolStripMenuItem
+			// 
+			this.setInstallDirectoryToolStripMenuItem.Name = "setInstallDirectoryToolStripMenuItem";
+			this.setInstallDirectoryToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.setInstallDirectoryToolStripMenuItem.Text = "Set Install Directory";
+			this.setInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.setInstallDirectoryToolStripMenuItem_Click);
+			// 
+			// checkForUpdatesToolStripMenuItem
+			// 
+			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+			this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
+			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+			// 
 			// folderBrowserDialog1
 			// 
 			this.folderBrowserDialog1.Description = "Select the game\'s folder, to be 7z\'d and uploaded";
@@ -465,39 +493,11 @@
 			// 
 			this.openFileDialog1.FileName = "openFileDialog1";
 			// 
-			// checkForUpdatesToolStripMenuItem
-			// 
-			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-			this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-			this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
-			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
-			// 
-			// setInstallDirectoryToolStripMenuItem
-			// 
-			this.setInstallDirectoryToolStripMenuItem.Name = "setInstallDirectoryToolStripMenuItem";
-			this.setInstallDirectoryToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-			this.setInstallDirectoryToolStripMenuItem.Text = "Set Install Directory";
-			this.setInstallDirectoryToolStripMenuItem.Click += new System.EventHandler(this.setInstallDirectoryToolStripMenuItem_Click);
-			// 
 			// saveFileDialog1
 			// 
 			this.saveFileDialog1.AddExtension = false;
 			this.saveFileDialog1.OverwritePrompt = false;
 			this.saveFileDialog1.ValidateNames = false;
-			// 
-			// imageButton
-			// 
-			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.imageButton.AutoScaleBorder = 0;
-			this.imageButton.AutoScaleImage = null;
-			this.imageButton.Location = new System.Drawing.Point(12, 216);
-			this.imageButton.Name = "imageButton";
-			this.imageButton.Size = new System.Drawing.Size(261, 118);
-			this.imageButton.TabIndex = 10;
-			this.imageButton.Text = "Image";
-			this.imageButton.UseVisualStyleBackColor = true;
-			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
 			// 
 			// MainForm
 			// 
@@ -508,6 +508,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MainForm";
 			this.Text = "PakMan";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel1.PerformLayout();
