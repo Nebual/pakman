@@ -44,7 +44,6 @@
 			this.purgeMappingsButton = new System.Windows.Forms.Button();
 			this.descriptionTextBox = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
-			this.imageButton = new PakMan.AutoScaleButton();
 			this.dependsTextBox = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.buildArchiveButton = new System.Windows.Forms.Button();
@@ -68,6 +67,8 @@
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+			this.imageButton = new PakMan.AutoScaleButton();
+			this.uploadGamesButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -149,6 +150,7 @@
 			// 
 			// splitContainer2.Panel2
 			// 
+			this.splitContainer2.Panel2.Controls.Add(this.uploadGamesButton);
 			this.splitContainer2.Panel2.Controls.Add(this.purgeMappingsButton);
 			this.splitContainer2.Panel2.Controls.Add(this.descriptionTextBox);
 			this.splitContainer2.Panel2.Controls.Add(this.label7);
@@ -240,7 +242,7 @@
 			// 
 			// purgeMappingsButton
 			// 
-			this.purgeMappingsButton.Location = new System.Drawing.Point(140, 339);
+			this.purgeMappingsButton.Location = new System.Drawing.Point(138, 339);
 			this.purgeMappingsButton.Name = "purgeMappingsButton";
 			this.purgeMappingsButton.Size = new System.Drawing.Size(23, 23);
 			this.purgeMappingsButton.TabIndex = 189;
@@ -268,20 +270,6 @@
 			this.label7.Size = new System.Drawing.Size(63, 13);
 			this.label7.TabIndex = 16;
 			this.label7.Text = "Description:";
-			// 
-			// imageButton
-			// 
-			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.imageButton.AutoScaleBorder = 0;
-			this.imageButton.AutoScaleImage = null;
-			this.imageButton.Location = new System.Drawing.Point(12, 216);
-			this.imageButton.Name = "imageButton";
-			this.imageButton.Size = new System.Drawing.Size(261, 118);
-			this.imageButton.TabIndex = 10;
-			this.imageButton.Text = "Image";
-			this.imageButton.UseVisualStyleBackColor = true;
-			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
 			// 
 			// dependsTextBox
 			// 
@@ -385,9 +373,9 @@
 			this.saveMappings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.saveMappings.Location = new System.Drawing.Point(12, 340);
 			this.saveMappings.Name = "saveMappings";
-			this.saveMappings.Size = new System.Drawing.Size(122, 22);
+			this.saveMappings.Size = new System.Drawing.Size(120, 22);
 			this.saveMappings.TabIndex = 11;
-			this.saveMappings.Text = "Save mappings.json";
+			this.saveMappings.Text = "Save games.json";
 			this.saveMappings.UseVisualStyleBackColor = true;
 			this.saveMappings.Click += new System.EventHandler(this.saveMappings_Click);
 			// 
@@ -496,8 +484,34 @@
 			// saveFileDialog1
 			// 
 			this.saveFileDialog1.AddExtension = false;
+			this.saveFileDialog1.CheckPathExists = false;
+			this.saveFileDialog1.FileName = "Open Folder";
 			this.saveFileDialog1.OverwritePrompt = false;
 			this.saveFileDialog1.ValidateNames = false;
+			// 
+			// imageButton
+			// 
+			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.imageButton.AutoScaleBorder = 0;
+			this.imageButton.AutoScaleImage = null;
+			this.imageButton.Location = new System.Drawing.Point(12, 216);
+			this.imageButton.Name = "imageButton";
+			this.imageButton.Size = new System.Drawing.Size(261, 118);
+			this.imageButton.TabIndex = 10;
+			this.imageButton.Text = "Image";
+			this.imageButton.UseVisualStyleBackColor = true;
+			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
+			// 
+			// uploadGamesButton
+			// 
+			this.uploadGamesButton.Location = new System.Drawing.Point(167, 339);
+			this.uploadGamesButton.Name = "uploadGamesButton";
+			this.uploadGamesButton.Size = new System.Drawing.Size(106, 23);
+			this.uploadGamesButton.TabIndex = 190;
+			this.uploadGamesButton.Text = "Upload games.json";
+			this.uploadGamesButton.UseVisualStyleBackColor = true;
+			this.uploadGamesButton.Click += new System.EventHandler(this.uploadGamesButton_Click);
 			// 
 			// MainForm
 			// 
@@ -569,6 +583,7 @@
 		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem setInstallDirectoryToolStripMenuItem;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+		private System.Windows.Forms.Button uploadGamesButton;
     }
 }
 

@@ -264,9 +264,8 @@ namespace PakMan {
 				game.archive_filename = game.name + ".7z";
 			}
 			//saveFileDialog1.ShowDialog( .Description = "Select the game's folder, to be 7z'd and uploaded";
-			saveFileDialog1.FileName = "";
+			saveFileDialog1.FileName = "Select Folder to Archive";
 			saveFileDialog1.Title = "Select Folder to Archive";
-			saveFileDialog1.Filter = "Folders|folders";
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK) {
 				FileUtil.createArchive(game.archive_filename, Path.GetDirectoryName(saveFileDialog1.FileName));
 				if (FileUtil.archiveExists(game.archive_filename)) {
@@ -289,9 +288,8 @@ namespace PakMan {
 		}
 
 		private void setInstallDirectoryToolStripMenuItem_Click(object sender, EventArgs e) {
-			saveFileDialog1.FileName = "";
+			saveFileDialog1.FileName = "Select Game Installation Folder";
 			saveFileDialog1.Title = "Specify where you'd like games installed to.";
-			saveFileDialog1.Filter = "Folders|folders";
 			if (saveFileDialog1.ShowDialog() == DialogResult.OK) {
 				settings.gamesFolder = Path.GetDirectoryName(saveFileDialog1.FileName);
 			}
@@ -315,6 +313,13 @@ namespace PakMan {
 			if (MessageBox.Show("Overwrite local games.json database with a freshly downloaded copy?", "Purge games.json", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) {
 				File.Delete(Games.GamesMappingFile);
 				loadGames();
+			}
+		}
+
+		private void uploadGamesButton_Click(object sender, EventArgs e) {
+			if (MessageBox.Show("Upload local games.json database to the server?", "Upload games.json", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) {
+				FileInfo objFile = new FileInfo(Games.GamesMappingFile);
+				FileUtil.upload(objFile.Name, objFile.OpenRead());
 			}
 		}
 
