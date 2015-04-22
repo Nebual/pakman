@@ -19,6 +19,7 @@ using System.Windows.Forms;
  * == Todo ==
  * Dependencies (do the multiple, hierarchial approach with recursion when ticking boxes)
  * Game Saves (have a wildcard?)
+ * Steam Launch Parameters - note, stored in localconfig.vdf['shortcuts'][SHA1(targetpath)]
  */
 
 namespace PakMan {
@@ -66,6 +67,7 @@ namespace PakMan {
 					settings.save();
 				}
 			}
+			steamRestartTickbox.Checked = settings.autoRestartSteam;
 
 			loadGames();
 		}
@@ -78,10 +80,11 @@ namespace PakMan {
 				gameLookup[game.name] = game;
 				bool downloaded = (game.archive_filename.Length > 0 && FileUtil.archiveExists(game.archive_filename));
 				bool installed = game.exists();
-				string archiveSize = downloaded ? FileUtil.SizeSuffix(game.archive_size) : "";
-				string gameSize = downloaded ? FileUtil.SizeSuffix(game.extracted_size) : "";
+				string archiveSize = game.archive_size != 0 ? FileUtil.SizeSuffix(game.archive_size) : "";
+				string gameSize = game.extracted_size != 0 ? FileUtil.SizeSuffix(game.extracted_size) : "";
 				itemList.Rows.Add(new object[] { downloaded, installed, game.name, game.description, archiveSize, gameSize });
 			}
+			itemList.Sort(itemList.Columns[2], ListSortDirection.Ascending);
 			dirty = false;
 		}
 		private void revertButton_Click(object sender, EventArgs e) {
@@ -335,6 +338,11 @@ namespace PakMan {
 				e.Cancel = true;
 				this.Activate();
 			}   
+		}
+
+		private void steamRestartTickbox_CheckedChanged(object sender, EventArgs e) {
+			settings.autoRestartSteam = steamRestartTickbox.Checked;
+			settings.save();
 		}
 	}
 }

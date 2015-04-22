@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PakMan {
 	class SteamShortcuts {
@@ -109,9 +111,23 @@ namespace PakMan {
 			if (dirty) {
 				writeShortcutVDF();
 				dirty = false;
+				//if (MessageBox.Show("Steam Shortcuts updated; restart steam?", "Restart Steam?", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+				if (MainForm.context.settings.autoRestartSteam) {
+					restartSteam();
+				}
 				return true;
 			}
 			return false;
+		}
+
+		public static void restartSteam() {
+			var processes = Process.GetProcessesByName("steam");
+			if (processes.Length > 0) {
+				var process = processes[0];
+				var path = process.MainModule.FileName;
+				process.Kill();
+				Process.Start(path);
+			}
 		}
 	}
 
@@ -133,7 +149,7 @@ namespace PakMan {
 		public VDFGame() { }
 		public VDFGame(Game game) {
 			name = game.name;
-			startdir = Path.GetFullPath(game.installfolder);
+			startdir = MainForm.context.settings.getGamesFolder(game.installfolder);
 			exe = Path.Combine(MainForm.context.settings.getGamesFolder(game.installfolder), game.targetexe);
 		}
 		public override string ToString() {

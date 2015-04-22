@@ -55,9 +55,11 @@ namespace PakMan
 			}
 		}
 		public static void deleteArchive(string archiveName) {
-			context.log("Deleting archive " + archiveName, "...");
-			delete(archiveName);
-			context.log(" done.");
+			if (archiveName.Length != 0 && archiveExists(archiveName)) {
+				context.log("Deleting archive " + archiveName, "...");
+				delete(archiveName);
+				context.log(" done.");
+			}
 		}
 		public static void delete(string fileName) {
 			if (fileName.Length != 0 && archiveExists(fileName)) {
@@ -185,6 +187,7 @@ namespace PakMan
 
 
 	public class UserSettings {
+		public bool autoRestartSteam = false;
 		public string steamFolder;
 		public string gamesFolder = "";
 		public string getGamesFolder(string fileName) {

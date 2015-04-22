@@ -34,6 +34,7 @@
 			this.logBox = new System.Windows.Forms.TextBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.steamRestartTickbox = new System.Windows.Forms.CheckBox();
 			this.itemList = new System.Windows.Forms.DataGridView();
 			this.D = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.I = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -41,9 +42,11 @@
 			this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.archiveSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.gameSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.uploadGamesButton = new System.Windows.Forms.Button();
 			this.purgeMappingsButton = new System.Windows.Forms.Button();
 			this.descriptionTextBox = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
+			this.imageButton = new PakMan.AutoScaleButton();
 			this.dependsTextBox = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
 			this.buildArchiveButton = new System.Windows.Forms.Button();
@@ -67,8 +70,6 @@
 			this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			this.imageButton = new PakMan.AutoScaleButton();
-			this.uploadGamesButton = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -144,6 +145,7 @@
 			// 
 			// splitContainer2.Panel1
 			// 
+			this.splitContainer2.Panel1.Controls.Add(this.steamRestartTickbox);
 			this.splitContainer2.Panel1.Controls.Add(this.itemList);
 			this.splitContainer2.Panel1.Controls.Add(this.applyButton);
 			this.splitContainer2.Panel1.Controls.Add(this.revertButton);
@@ -173,6 +175,18 @@
 			this.splitContainer2.Size = new System.Drawing.Size(815, 366);
 			this.splitContainer2.SplitterDistance = 523;
 			this.splitContainer2.TabIndex = 3;
+			// 
+			// steamRestartTickbox
+			// 
+			this.steamRestartTickbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.steamRestartTickbox.AutoSize = true;
+			this.steamRestartTickbox.Location = new System.Drawing.Point(402, 346);
+			this.steamRestartTickbox.Name = "steamRestartTickbox";
+			this.steamRestartTickbox.Size = new System.Drawing.Size(118, 17);
+			this.steamRestartTickbox.TabIndex = 557;
+			this.steamRestartTickbox.Text = "Auto Restart Steam";
+			this.steamRestartTickbox.UseVisualStyleBackColor = true;
+			this.steamRestartTickbox.CheckedChanged += new System.EventHandler(this.steamRestartTickbox_CheckedChanged);
 			// 
 			// itemList
 			// 
@@ -240,8 +254,20 @@
 			this.gameSize.ReadOnly = true;
 			this.gameSize.Width = 70;
 			// 
+			// uploadGamesButton
+			// 
+			this.uploadGamesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.uploadGamesButton.Location = new System.Drawing.Point(167, 339);
+			this.uploadGamesButton.Name = "uploadGamesButton";
+			this.uploadGamesButton.Size = new System.Drawing.Size(106, 23);
+			this.uploadGamesButton.TabIndex = 190;
+			this.uploadGamesButton.Text = "Upload games.json";
+			this.uploadGamesButton.UseVisualStyleBackColor = true;
+			this.uploadGamesButton.Click += new System.EventHandler(this.uploadGamesButton_Click);
+			// 
 			// purgeMappingsButton
 			// 
+			this.purgeMappingsButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.purgeMappingsButton.Location = new System.Drawing.Point(138, 339);
 			this.purgeMappingsButton.Name = "purgeMappingsButton";
 			this.purgeMappingsButton.Size = new System.Drawing.Size(23, 23);
@@ -270,6 +296,20 @@
 			this.label7.Size = new System.Drawing.Size(63, 13);
 			this.label7.TabIndex = 16;
 			this.label7.Text = "Description:";
+			// 
+			// imageButton
+			// 
+			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.imageButton.AutoScaleBorder = 0;
+			this.imageButton.AutoScaleImage = null;
+			this.imageButton.Location = new System.Drawing.Point(12, 216);
+			this.imageButton.Name = "imageButton";
+			this.imageButton.Size = new System.Drawing.Size(261, 118);
+			this.imageButton.TabIndex = 10;
+			this.imageButton.Text = "Image";
+			this.imageButton.UseVisualStyleBackColor = true;
+			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
 			// 
 			// dependsTextBox
 			// 
@@ -489,30 +529,6 @@
 			this.saveFileDialog1.OverwritePrompt = false;
 			this.saveFileDialog1.ValidateNames = false;
 			// 
-			// imageButton
-			// 
-			this.imageButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.imageButton.AutoScaleBorder = 0;
-			this.imageButton.AutoScaleImage = null;
-			this.imageButton.Location = new System.Drawing.Point(12, 216);
-			this.imageButton.Name = "imageButton";
-			this.imageButton.Size = new System.Drawing.Size(261, 118);
-			this.imageButton.TabIndex = 10;
-			this.imageButton.Text = "Image";
-			this.imageButton.UseVisualStyleBackColor = true;
-			this.imageButton.Click += new System.EventHandler(this.imageButton_Click);
-			// 
-			// uploadGamesButton
-			// 
-			this.uploadGamesButton.Location = new System.Drawing.Point(167, 339);
-			this.uploadGamesButton.Name = "uploadGamesButton";
-			this.uploadGamesButton.Size = new System.Drawing.Size(106, 23);
-			this.uploadGamesButton.TabIndex = 190;
-			this.uploadGamesButton.Text = "Upload games.json";
-			this.uploadGamesButton.UseVisualStyleBackColor = true;
-			this.uploadGamesButton.Click += new System.EventHandler(this.uploadGamesButton_Click);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -531,6 +547,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.splitContainer2.Panel1.ResumeLayout(false);
+			this.splitContainer2.Panel1.PerformLayout();
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -584,6 +601,7 @@
 		private System.Windows.Forms.ToolStripMenuItem setInstallDirectoryToolStripMenuItem;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 		private System.Windows.Forms.Button uploadGamesButton;
+		internal System.Windows.Forms.CheckBox steamRestartTickbox;
     }
 }
 
