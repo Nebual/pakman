@@ -94,6 +94,8 @@ namespace PakMan {
 		private void apply_Click(object sender, EventArgs e) {
 			log("");
 
+			resolveDependancies();
+
 			SteamShortcuts steamShortcuts = new SteamShortcuts(settings.steamShortcutsPath, settings.steamGridPath, this.log);
 
 			foreach (DataGridViewRow row in itemList.Rows) {
@@ -130,6 +132,32 @@ namespace PakMan {
 			if (steamShortcuts.flush()) log("Updated Steam's shortcuts.vdf file. Please restart Steam.");
 			settings.save();
 			log("** Processing Complete **");
+		}
+
+		private void resolveDependancies() {
+			// todo: inform user of superfluous parents (if they have no children installed, and no targetexe)
+			IDictionary<string, DataGridViewRow> rowsLookup = new Dictionary<string, DataGridViewRow>();
+			foreach (DataGridViewRow row in itemList.Rows) {
+				if (row.Cells[2].Value == null) continue;
+				rowsLookup[(string)row.Cells[2].Value] = row;
+			}
+			foreach (DataGridViewRow row in itemList.Rows) {
+				if (row.Cells[2].Value == null) continue;
+				string name = (string)row.Cells[2].Value;
+				Game game = gameLookup[name];
+				if ((bool)row.Cells[1].Value && game.dependencies.Length > 0) {
+					foreach (string parent in game.dependencies.Split(new char[] { ',' })) {
+						string parentName = parent.Trim();
+						if (gameLookup.ContainsKey(parentName) && rowsLookup.ContainsKey(parentName)) {
+							if (!(bool)rowsLookup[parentName].Cells[1].Value) {
+								log("Child " + name + " requires " + parentName + ", ticking...");
+								rowsLookup[parentName].Cells[1].Value = true;
+							}
+						}
+					}
+				}
+				rowsLookup[(string)row.Cells[2].Value] = row;
+			}
 		}
 
 		private string logContext = "";
