@@ -104,27 +104,34 @@ namespace PakMan {
 				Game game = gameLookup[(string)row.Cells[2].Value];
 				logContext = game.name;
 
-				if ((bool)row.Cells[0].Value) {
-					FileUtil.downloadArchive(game.archive_filename);
-				}
+				try {
+					if ((bool)row.Cells[0].Value) {
+						FileUtil.downloadArchive(game.archive_filename);
+					}
 
-				if ((bool)row.Cells[1].Value) {
-					FileUtil.downloadArchive(game.archive_filename);
-
-					if (!game.exists()) {
-						if (game.install()) {
-							row.Cells[5].Value = FileUtil.SizeSuffix(game.extracted_size);
-							steamShortcuts.addGame(game);
+					if ((bool)row.Cells[1].Value) {
+						if (!game.exists()) {
+							FileUtil.downloadArchive(game.archive_filename);
+							if (game.install()) {
+								row.Cells[5].Value = FileUtil.SizeSuffix(game.extracted_size);
+								steamShortcuts.addGame(game);
+							}
 						}
 					}
-				}
-				else {
-					game.uninstall();
-					steamShortcuts.removeGame(game);
-				}
+					else {
+						game.uninstall();
+						steamShortcuts.removeGame(game);
+					}
 
-				if (!(bool)row.Cells[0].Value) {
-					FileUtil.deleteArchive(game.archive_filename);
+					if (!(bool)row.Cells[0].Value) {
+						FileUtil.deleteArchive(game.archive_filename);
+					}
+				}
+				catch (WebException ex) {
+					HttpWebResponse errorResponse = ex.Response as HttpWebResponse;
+					if (errorResponse.StatusCode == HttpStatusCode.NotFound) {
+						log("Warning: " + game.archive_filename + " not found on remote site!");
+					}
 				}
 			}
 			logContext = "";
