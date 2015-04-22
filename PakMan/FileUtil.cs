@@ -124,9 +124,16 @@ namespace PakMan
 
 			Stream objStream = objFTPRequest.GetRequestStream();
 
+			context.log("");
+			int nextTime = DateTime.Now.Second + 2; int bytesUploaded = 0;
 			int len = 0;
 			while ((len = objFileStream.Read(objBuffer, 0, intBufferLength)) != 0) {
 				objStream.Write(objBuffer, 0, len);
+				bytesUploaded += len;
+				if (nextTime >= DateTime.Now.Second) {
+					nextTime = DateTime.Now.Second + 2;
+					context.log(String.Format("{0:P2} - {1}/{2}", ((float)bytesUploaded) / objFTPRequest.ContentLength, SizeSuffix(bytesUploaded), SizeSuffix(objFTPRequest.ContentLength)));
+				}
 			}
 
 			objStream.Close();
